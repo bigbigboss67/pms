@@ -13,7 +13,8 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0f172a;color:#e2e8f0;font-family:Inter,system-ui,sans-serif;height:100vh;overflow:hidden;}
@@ -2139,20 +2140,53 @@ function confirmImport(){
       p.lat='25.2048';p.lng='55.2708';p._gpsMethod='default';
     }
     /* Use property ref as plot no if no column mapped */
-    if(!p.no)p.no='P-'+(i+1);
+    // p.no will be auto-assigned below using smart sequential numbering
     return p;
   });
   if(!_importData.length){showToastNotification('Nothing to import.','error');return;}
   var replace=!!(document.getElementById('replaceChk')&&document.getElementById('replaceChk').checked);
-  var existingMap={};plots.forEach(function(p,i){existingMap[(p.no||'').toLowerCase()]=i;});
+  var existingMap={};
+  var maxP=0;
+  plots.forEach(function(p,i){
+    existingMap[(p.no||'').toLowerCase()]=i;
+    if(p.no && typeof p.no === 'string'){
+      var m = p.no.toUpperCase().match(/^P-(\d+)$/);
+      if(m){
+        var n = parseInt(m[1], 10);
+        if(n > maxP) maxP = n;
+      }
+    }
+  });
   var added=0,replaced=0,skipped=0;
   _importData.forEach(function(p){
     p.id=Date.now()+Math.random();
+    
+    // Auto-assign Plot No if missing
+    if(!p.no || p.no.trim()===''){
+      maxP++;
+      p.no = 'P-' + maxP;
+    }
+
+    // Duplicate data check (Dev + Price + Size + Type + GFA + Owner)
+    var isDuplicateData = plots.some(function(ep){
+      return (ep.dev||'').trim().toLowerCase() === (p.dev||'').trim().toLowerCase() &&
+             (ep.price||'').trim() === (p.price||'').trim() &&
+             (ep.size||'').trim() === (p.size||'').trim() &&
+             (ep.type||'').trim().toLowerCase() === (p.type||'').trim().toLowerCase() &&
+             (ep.gfa||'').trim() === (p.gfa||'').trim() &&
+             (ep.owner||'').trim().toLowerCase() === (p.owner||'').trim().toLowerCase();
+    });
+
     var key=(p.no||'').toLowerCase();
-    if(key in existingMap){
+    
+    if(isDuplicateData){
+      skipped++; // Skip identical data completely
+    } else if(key in existingMap){
       if(replace){plots[existingMap[key]]=p;replaced++;}
       else skipped++;
-    }else{plots.push(p);existingMap[key]=plots.length-1;added++;}
+    } else {
+      plots.push(p);existingMap[key]=plots.length-1;added++;
+    }
   });
   filteredPlots=plots.slice();
   _autoFitMap=true;
@@ -2161,7 +2195,7 @@ function confirmImport(){
   var withExactGps=_importData.filter(function(p){return!isNaN(parseFloat(p.lat))&&!isNaN(parseFloat(p.lng))&&p._gpsMethod!=='city'&&p._gpsMethod!=='default';});
   var withAnyGps=_importData.filter(function(p){return!isNaN(parseFloat(p.lat))&&!isNaN(parseFloat(p.lng));});
   var total=added+replaced;
-  var parts=[];if(added)parts.push(added+' added');if(replaced)parts.push(replaced+' updated');if(skipped)parts.push(skipped+' skipped (duplicate)');
+  var parts=[];if(added)parts.push(added+' added');if(replaced)parts.push(replaced+' updated');if(skipped)parts.push(skipped+' already available in the list (skipped)');
   var msg=parts.join(', ')||'Nothing imported';
   var withUrl=_importData.filter(function(p){return p.locationUrl&&(p._gpsMethod==='city'||p._gpsMethod==='default');}).length;
   if(withAnyGps.length>0){
@@ -2438,16 +2472,30 @@ function connectGoogleCalendar(){showToastNotification('Google Calendar coming s
 function showOfflineSyncModal(){showToastNotification('Data is saved locally in your browser.','info');}
 
 /* ══════════════════════════════════════════════
-   LIVE SYNC — MQTT over WebSocket
-   Replaces broken Gun.js P2P relays.
-   Uses HiveMQ public broker (free, no account).
-   Retained messages: new joiners instantly get
-   current room state without waiting for a push.
+   LIVE SYNC — Firebase Realtime Database
+   Replaces unreliable MQTT brokers for instant syncing.
    ══════════════════════════════════════════════ */
-var _MQTT_BROKERS=[
-  'wss://broker.hivemq.com:8884/mqtt',
-  'wss://broker.emqx.io:8084/mqtt'
-];
+const _firebaseConfig = {
+    apiKey: "AIzaSyDKthkVZLmK5Y_wT0Jmx90UEkzJs_Pz9-I",
+    authDomain: "plot-ai-87781.firebaseapp.com",
+    databaseURL: "https://plot-ai-87781-default-rtdb.firebaseio.com",
+    projectId: "plot-ai-87781",
+    storageBucket: "plot-ai-87781.firebasestorage.app",
+    messagingSenderId: "723228647195",
+    appId: "1:723228647195:web:00693e31e923014e1efdbe"
+};
+
+var _fbDb = null;
+var _fbRoomRef = null;
+
+function _initFirebase(){
+  if(!window.firebase) return false;
+  if(firebase.apps.length === 0){
+    firebase.initializeApp(_firebaseConfig);
+  }
+  _fbDb = firebase.database();
+  return true;
+}
 
 function _plotsForSync(arr){
   return arr.map(function(p){var c=Object.assign({},p);if(typeof c.image==='string'&&c.image.startsWith('data:'))c.image='';return c;});
@@ -2463,13 +2511,15 @@ function _setSyncStatus(s){
   else{btn.style.color='';btn.title='Sync';}
 }
 
+var _forcePull=false;
 function _applyRemoteData(raw){
   if(!raw)return;
   var str=typeof raw==='string'?raw:(raw instanceof Uint8Array||Array.isArray(raw))?new TextDecoder().decode(raw):String(raw);
   var d;try{d=JSON.parse(str);}catch(e){return;}
   if(!d||!Array.isArray(d.plots))return;
-  if(d.sid===_sessionId)return; /* own echo — ignore */
-  if(d.ts&&d.ts>0&&d.ts<=_lastRemoteTs)return; /* stale */
+  if(d.sid===_sessionId&&!_forcePull)return; /* own echo — ignore (unless force-pulling) */
+  if(d.ts&&d.ts>0&&d.ts<=_lastRemoteTs&&!_forcePull)return; /* stale (unless force-pulling) */
+  _forcePull=false; /* reset after use */
   _lastRemoteTs=d.ts||Date.now();
   _lastSyncTime=Date.now();
   var imgs={};plots.forEach(function(p){if(p.image)imgs[p.id]=p.image;});
@@ -2482,117 +2532,84 @@ function _applyRemoteData(raw){
   showToastNotification('↓ Synced '+plots.length+' plots'+who,'success');
 }
 
-function _loadMqttJs(cb){
-  if(window.mqtt){cb();return;}
-  var done=false;
-  function load(src){
-    var s=document.createElement('script');s.src=src;
-    s.onload=function(){if(!done){done=true;cb();}};
-    s.onerror=function(){if(!done&&src.indexOf('unpkg')>-1)load('https://cdn.jsdelivr.net/npm/mqtt@5/dist/mqtt.min.js');};
-    document.head.appendChild(s);
-  }
-  load('https://unpkg.com/mqtt@5/dist/mqtt.min.js');
-}
-
-function _mqttConnect(brokerIdx,onReady){
-  if(brokerIdx>=_MQTT_BROKERS.length){
-    _setSyncStatus('error');
-    showToastNotification('Cannot reach sync broker. Check internet connection.','error');
-    return;
-  }
-  var url=_MQTT_BROKERS[brokerIdx];
-  var cid='aiplot_'+(_sessionId||'x').slice(0,8)+'_'+Math.random().toString(36).slice(2,6);
-  var client;
-  try{
-    client=mqtt.connect(url,{clientId:cid,keepalive:20,connectTimeout:10000,reconnectPeriod:0,clean:true});
-  }catch(e){_mqttConnect(brokerIdx+1,onReady);return;}
-  var timer=setTimeout(function(){
-    try{client.end(true);}catch(e){}
-    showToastNotification('Broker '+( brokerIdx+1)+' timed out, trying next…','info');
-    _mqttConnect(brokerIdx+1,onReady);
-  },10000);
-  client.on('connect',function(){
-    clearTimeout(timer);
-    _mqttClient=client;_mqttConnected=true;
-    /* Receive all incoming messages */
-    client.on('message',function(topic,msg){
-      if(topic!==_mqttTopic)return;
-      _applyRemoteData(msg);
-    });
-    client.on('error',function(){_mqttConnected=false;_setSyncStatus('error');});
-    client.on('close',function(){_mqttConnected=false;if(_syncActive)_setSyncStatus('error');});
-    onReady();
-  });
-  client.on('error',function(e){
-    clearTimeout(timer);
-    try{client.end(true);}catch(ex){}
-    _mqttConnect(brokerIdx+1,onReady);
-  });
-}
-
-function _doMqttConnect(onReady){
-  /* Tear down any existing connection */
-  if(_mqttClient){try{_mqttClient.end(true);}catch(e){}_mqttClient=null;_mqttConnected=false;}
-  _setSyncStatus('connecting');
-  _loadMqttJs(function(){_mqttConnect(0,onReady);});
-}
-
-function _mqttSubscribeAndPush(){
-  if(!_mqttClient||!_mqttTopic)return;
-  /* Subscribe with QoS 1 — broker sends retained message immediately on subscribe */
-  _mqttClient.subscribe(_mqttTopic,{qos:1},function(err){
-    if(err){_setSyncStatus('error');showToastNotification('Subscription failed','error');return;}
-    _setSyncStatus('live');
-    showToastNotification('✓ Joined room <b>'+esc(_syncRoom)+'</b> — syncing','success');
-    /* Push our current data so peers get it; retain=true so new joiners get it too */
-    setTimeout(_doPush,400);
-  });
-}
-
 function _doPush(){
-  if(!_mqttClient||!_mqttConnected||!_syncActive||!_mqttTopic)return;
+  if(!_syncActive || !_fbRoomRef) return;
   var payload=JSON.stringify({plots:_plotsForSync(plots),ts:Date.now(),sid:_sessionId,user:(currentUser&&currentUser.name)||'unknown',n:plots.length});
-  _mqttClient.publish(_mqttTopic,payload,{qos:1,retain:true},function(err){
-    _setSyncStatus(err?'error':'live');
-    if(err)showToastNotification('Sync push failed','error');
+  _fbRoomRef.set(payload).then(function(){
+    _setSyncStatus('live');
+  }).catch(function(err){
+    _setSyncStatus('error');
+    showToastNotification('Sync push failed: ' + err.message, 'error');
   });
 }
 
 function pushSync(){clearTimeout(_pushTimer);_pushTimer=setTimeout(_doPush,600);}
 
 function pullSync(){
-  if(!_mqttClient||!_mqttConnected){showToastNotification('Not connected to a sync room','error');return;}
-  /* Unsub then resub — broker immediately re-delivers the retained message */
+  if(!_syncActive||!_fbRoomRef){showToastNotification('Not connected to a sync room','error');return;}
+  _forcePull=true;
   _lastRemoteTs=0;
-  _mqttClient.unsubscribe(_mqttTopic,function(){
-    _mqttClient.subscribe(_mqttTopic,{qos:1},function(err){
-      if(!err)showToastNotification('Pulling latest from room…','info');
-    });
+  showToastNotification('Pulling latest from room…','info');
+  _fbRoomRef.once('value').then(function(snapshot){
+    var val = snapshot.val();
+    if(val) _applyRemoteData(val);
+    else showToastNotification('Room is empty', 'info');
+    _forcePull=false;
+  }).catch(function(){
+    _forcePull=false;
+    showToastNotification('Pull failed', 'error');
   });
 }
 
-function connectSync(){
-  var inp=document.getElementById('syncRoomInput');
-  var room=(inp?inp.value:'').trim().replace(/[^a-zA-Z0-9_-]/g,'-');
+function connectSync(autoRoom){
+  var room=autoRoom;
+  if(typeof room !== 'string' || !room){
+    var inp=document.getElementById('syncRoomInput');
+    room=(inp?inp.value:'').trim().replace(/[^a-zA-Z0-9_-]/g,'-');
+  }
   if(!room){showToastNotification('Enter a Room Code.','error');return;}
   disconnectSync(true);/* silent teardown */
-  _syncRoom=room;_syncActive=true;_lastRemoteTs=0;
-  _mqttTopic='aiplot/v2/'+room;
+  
+  if(!_initFirebase()){
+    showToastNotification('Firebase library not loaded.', 'error');
+    return;
+  }
+  
+  _syncRoom=room; _syncActive=true; _lastRemoteTs=0;
   _syncConfig={room:room,active:true};
   try{localStorage.setItem('aiplot_sync',JSON.stringify(_syncConfig));}catch(e){}
   var old=document.getElementById('syncModal');if(old)old.remove();
   showToastNotification('Connecting to room <b>'+esc(room)+'</b>…','info');
-  _doMqttConnect(_mqttSubscribeAndPush);
+  _setSyncStatus('connecting');
+  
+  _fbRoomRef = _fbDb.ref('sync_rooms/' + room);
+  
+  _fbRoomRef.on('value', function(snapshot){
+    var val = snapshot.val();
+    if(val){
+      _applyRemoteData(val);
+    } else {
+      // Room is empty, initialize it if we have plots
+      if(plots.length > 0){
+        _doPush();
+      } else {
+        _setSyncStatus('live');
+        showToastNotification('✓ Joined empty room <b>'+esc(_syncRoom)+'</b>','success');
+      }
+    }
+  }, function(error){
+    _setSyncStatus('error');
+    showToastNotification('Firebase connection error: ' + error.message, 'error');
+  });
 }
 
 function disconnectSync(silent){
   clearTimeout(_pushTimer);
-  if(_mqttClient){
-    try{if(_mqttTopic)_mqttClient.unsubscribe(_mqttTopic);}catch(e){}
-    try{_mqttClient.end(true);}catch(e){}
-    _mqttClient=null;
+  if(_fbRoomRef){
+    _fbRoomRef.off();
+    _fbRoomRef = null;
   }
-  _mqttConnected=false;_syncActive=false;_syncRoom='';_lastRemoteTs=0;_mqttTopic='';
+  _syncActive=false;_syncRoom='';_lastRemoteTs=0;
   _syncConfig={room:'',active:false};
   try{localStorage.removeItem('aiplot_sync');}catch(e){}
   _setSyncStatus('off');
@@ -2762,12 +2779,10 @@ window.onload=function(){
     },2000);
   }
   if(_syncConfig&&_syncConfig.active&&_syncConfig.room){
-    _syncRoom=_syncConfig.room;_syncActive=true;_lastRemoteTs=0;
-    _mqttTopic='aiplot/v2/'+_syncConfig.room;
-    showToastNotification('🔗 Auto-reconnecting to room: <b>'+esc(_syncConfig.room)+'</b>…','info');
-    _doMqttConnect(_mqttSubscribeAndPush);
+    connectSync(_syncConfig.room);
   }
 };
 </script>
 </body>
 </html>
+

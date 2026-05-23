@@ -472,6 +472,66 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
   background-size: 80px 80px;
   z-index:500;
 }
+
+/* ═══ Field Voice Button ═══ */
+.field-mic-btn{background:#0a1628;border:1px solid #1e3a5f;color:#4e6380;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;flex-shrink:0;transition:all .15s;}
+.field-mic-btn:hover{border-color:#6366f1;color:#6366f1;}
+.field-mic-btn.active{border-color:#ef4444;color:#ef4444;animation:micPulse .8s ease-in-out infinite;}
+
+/* ═══ Language Switcher ═══ */
+.lang-select{background:#0a1628;border:1px solid #1e3a5f;border-radius:8px;color:#e2e8f0;font-size:11px;font-weight:700;padding:5px 28px 5px 10px;cursor:pointer;outline:none;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234e6380'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:all .15s;}
+.lang-select:hover{border-color:#6366f1;color:#fff;}
+.lang-select:focus{border-color:#6366f1;box-shadow:0 0 0 2px rgba(99,102,241,.2);}
+.lang-select option{background:#0d1635;color:#e2e8f0;font-weight:600;}
+
+/* ═══ Voice Input Button ═══ */
+.mic-btn{background:none;border:none;color:#4e6380;cursor:pointer;padding:0 6px;font-size:14px;transition:all .2s;display:flex;align-items:center;}
+.mic-btn:hover{color:#6366f1;}
+.mic-btn.active{color:#ef4444;animation:micPulse .8s ease-in-out infinite;}
+@keyframes micPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.15);}}
+
+/* ═══ AI Chat Widget ═══ */
+#aiChatBtn{position:fixed;bottom:24px;right:24px;width:54px;height:54px;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;border-radius:50%;color:white;font-size:22px;cursor:pointer;box-shadow:0 8px 32px rgba(99,102,241,0.45);z-index:9000;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+#aiChatBtn:hover{transform:scale(1.08);box-shadow:0 12px 40px rgba(99,102,241,0.6);}
+#aiChatBtn .chat-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:#ef4444;border-radius:50%;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;display:none;}
+#aiChatPanel{position:fixed;bottom:90px;right:24px;width:360px;max-height:520px;background:#070d1a;border:1px solid #1e3a5f;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,0.8);z-index:9001;display:none;flex-direction:column;overflow:hidden;}
+#aiChatPanel.open{display:flex;}
+.acp-header{background:linear-gradient(135deg,#0d1829,#111827);padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1e3a5f;}
+.acp-avatar{width:34px;height:34px;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.acp-title{font-weight:700;font-size:13px;color:#e2e8f0;}
+.acp-sub{font-size:10px;color:#4e6380;}
+.acp-close{margin-left:auto;background:none;border:none;color:#4e6380;cursor:pointer;font-size:16px;padding:4px;}
+.acp-close:hover{color:#e2e8f0;}
+#aiChatMessages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:340px;}
+#aiChatMessages::-webkit-scrollbar{width:4px;}
+#aiChatMessages::-webkit-scrollbar-track{background:transparent;}
+#aiChatMessages::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:4px;}
+.chat-msg{max-width:85%;font-size:12px;line-height:1.5;padding:9px 12px;border-radius:12px;word-break:break-word;}
+.chat-msg.user{background:#1e3a8a;color:#c7d2fe;align-self:flex-end;border-bottom-right-radius:3px;}
+.chat-msg.ai{background:#0d1829;border:1px solid #1e3a5f;color:#94a3b8;align-self:flex-start;border-bottom-left-radius:3px;}
+.chat-msg.ai .msg-name{font-size:9px;color:#6366f1;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.chat-typing{display:flex;gap:4px;align-items:center;padding:6px 10px;}
+.chat-typing span{width:6px;height:6px;background:#4e6380;border-radius:50%;animation:dot .9s infinite;}
+.chat-typing span:nth-child(2){animation-delay:.2s;}
+.chat-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes dot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.acp-input-row{padding:10px 12px;border-top:1px solid #1e3a5f;display:flex;gap:8px;align-items:center;}
+#aiChatInput{flex:1;background:#0a1628;border:1px solid #1e3a5f;border-radius:10px;color:#e2e8f0;font-size:12px;padding:8px 12px;outline:none;font-family:inherit;}
+#aiChatInput:focus{border-color:#6366f1;}
+#aiChatInput::placeholder{color:#2a4060;}
+.acp-send{background:#6366f1;border:none;color:white;border-radius:10px;padding:8px 11px;cursor:pointer;font-size:13px;flex-shrink:0;transition:all .15s;}
+.acp-send:hover{background:#4f46e5;}
+.acp-mic{background:none;border:none;color:#4e6380;cursor:pointer;font-size:14px;padding:6px;flex-shrink:0;transition:all .2s;}
+.acp-mic:hover{color:#6366f1;}
+.acp-mic.active{color:#ef4444;animation:micPulse .8s ease-in-out infinite;}
+
+/* ═══ RTL support for Arabic ═══ */
+body.rtl{direction:rtl;text-align:right;}
+body.rtl #sidebar{border-right:none;border-left:1px solid #102040;}
+body.rtl #aiChatPanel,body.rtl #aiChatBtn{right:auto;left:24px;}
+body.rtl .chat-msg.user{align-self:flex-start;}
+body.rtl .chat-msg.ai{align-self:flex-end;}
+body.rtl .acp-close{margin-left:0;margin-right:auto;}
 </style>
 </head>
 <body>
@@ -523,8 +583,8 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
       <div class="fsection">
         <div class="fsectitle">Basic Information</div>
         <div class="fgrid">
-          <div class="fgroup"><label>Plot Number <span class="rstar">*</span></label><input type="text" id="pm_no" placeholder="e.g. PLT-001"></div>
-          <div class="fgroup"><label>Development <span class="rstar">*</span></label><input type="text" id="pm_dev" placeholder="e.g. Breza Hills"></div>
+          <div class="fgroup"><label>Plot Number <span class="rstar">*</span></label><div style="display:flex;gap:4px;align-items:center;"><input type="text" id="pm_no" placeholder="e.g. PLT-001" style="flex:1;"><button type="button" class="field-mic-btn" onclick="_fieldVoice('pm_no')" title="Voice input"><i class="fas fa-microphone"></i></button></div></div>
+          <div class="fgroup"><label>Development <span class="rstar">*</span></label><div style="display:flex;gap:4px;align-items:center;"><input type="text" id="pm_dev" placeholder="e.g. Breza Hills" style="flex:1;"><button type="button" class="field-mic-btn" onclick="_fieldVoice('pm_dev')" title="Voice input"><i class="fas fa-microphone"></i></button></div></div>
           <div class="fgroup"><label>Status</label><select id="pm_status"><option value="Available">Available</option><option value="Reserved">Reserved</option><option value="Sold">Sold</option></select></div>
           <div class="fgroup"><label>Type</label><select id="pm_type"><option value="">-- Select Type --</option><option value="Residential">Residential</option><option value="Commercial">Commercial</option><option value="Mixed Use">Mixed Use</option><option value="Industrial">Industrial</option><option value="Agricultural">Agricultural</option></select></div>
         </div>
@@ -563,8 +623,8 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
       <div class="fsection">
         <div class="fsectitle">Financial</div>
         <div class="fgrid">
-          <div class="fgroup"><label>Size (sqft) <span class="rstar">*</span></label><input type="number" id="pm_size" placeholder="e.g. 500"></div>
-          <div class="fgroup"><label>Price (AED) <span class="rstar">*</span></label><input type="number" id="pm_price" placeholder="e.g. 2500000"></div>
+          <div class="fgroup"><label>Size (sqft) <span class="rstar">*</span></label><div style="display:flex;gap:4px;align-items:center;"><input type="number" id="pm_size" placeholder="e.g. 500" style="flex:1;"><button type="button" class="field-mic-btn" onclick="_fieldVoice('pm_size')" title="Voice input"><i class="fas fa-microphone"></i></button></div></div>
+          <div class="fgroup"><label>Price (AED) <span class="rstar">*</span></label><div style="display:flex;gap:4px;align-items:center;"><input type="number" id="pm_price" placeholder="e.g. 2500000" style="flex:1;"><button type="button" class="field-mic-btn" onclick="_fieldVoice('pm_price')" title="Voice input"><i class="fas fa-microphone"></i></button></div></div>
         </div>
       </div>
       <div class="fsection">
@@ -675,8 +735,16 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
     <div id="topbar">
       <button class="ibtn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
       <span class="tbbrand"><i class="fas fa-home" style="color:#6366f1;margin-right:5px;"></i>XP HOMES</span>
-      <div class="tbsrch"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search plots..." oninput="debounceSearch()"></div>
+      <div class="tbsrch"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search plots..." oninput="debounceSearch()"><button class="mic-btn" id="searchMicBtn" onclick="_toggleSearchVoice()" title="Voice search"><i class="fas fa-microphone"></i></button></div>
       <div class="tbacts">
+        <select class="lang-select" id="langSelect" onchange="_setLang(this.value)" title="Switch language">
+          <option value="en">🇬🇧 English</option>
+          <option value="ar">🇦🇪 العربية</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="bs">🇧🇦 Bosanski</option>
+          <option value="ru">🇷🇺 Русский</option>
+        </select>
         <button class="ibtn" onclick="toggleOnlineSync()" title="Sync"><i class="fas fa-cloud"></i></button>
         <button class="ibtn" onclick="document.getElementById('importModal').classList.remove('hidden')" title="Import"><i class="fas fa-upload"></i></button>
         <button class="ibtn" onclick="exportCSV()" title="Export"><i class="fas fa-download"></i></button>
@@ -691,19 +759,19 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
       <select class="fi" id="filterType" onchange="applyFilters()" title="Filter by Type"><option value="">All Types</option><option value="Residential">Residential</option><option value="Commercial">Commercial</option><option value="Mixed Use">Mixed Use</option><option value="Industrial">Industrial</option><option value="Agricultural">Agricultural</option></select>
       <div style="width:1px;height:22px;background:#102040;flex-shrink:0;"></div>
       <!-- Land Size Range -->
-      <span style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">SIZE&nbsp;(sqft)</span>
+      <span data-lang-key="sizeLabel" style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">SIZE&nbsp;(sqft)</span>
       <input class="fi" type="number" id="filterMinSize" placeholder="Min" oninput="debounceSearch()" style="width:72px;" title="Min land size (sqft)">
       <span style=”color:#1e3a5f;font-size:11px;”>—</span>
       <input class="fi" type="number" id="filterMaxSize" placeholder="Max" oninput="debounceSearch()" style="width:72px;" title="Max land size (sqft)">
       <div style="width:1px;height:22px;background:#102040;flex-shrink:0;"></div>
       <!-- Price Range -->
-      <span style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">PRICE&nbsp;(AED)</span>
+      <span data-lang-key="priceLabel" style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">PRICE&nbsp;(AED)</span>
       <input class="fi" type="number" id="filterMinPrice" placeholder="Min" oninput="debounceSearch()" style="width:88px;" title="Min price (AED)">
       <span style=”color:#1e3a5f;font-size:11px;”>—</span>
       <input class="fi" type="number" id="filterMaxPrice" placeholder="Max" oninput="debounceSearch()" style="width:88px;" title="Max price (AED)">
       <div style="width:1px;height:22px;background:#102040;flex-shrink:0;"></div>
       <!-- GFA Range -->
-      <span style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">GFA</span>
+      <span data-lang-key="gfaLabel" style="font-size:10px;color:#4e6380;font-weight:700;white-space:nowrap;">GFA</span>
       <input class="fi" type="number" id="filterMinGfa" placeholder="Min" oninput="debounceSearch()" style="width:68px;" title="Min GFA">
       <span style=”color:#1e3a5f;font-size:11px;”>—</span>
       <input class="fi" type="number" id="filterMaxGfa" placeholder="Max" oninput="debounceSearch()" style="width:68px;" title="Max GFA">
@@ -711,7 +779,7 @@ body{background:#04080f;color:#dde6f0;font-family:"Inter",system-ui,sans-serif;h
       <button class="fbtn act" onclick="clearFilters()" style="white-space:nowrap;"><i class="fas fa-times"></i> Clear</button>
       <input class="fi" id="geocodeInput" placeholder="Jump to address…" style="flex:1;min-width:100px;">
       <button class="fbtn" onclick="geocodeAddress()" title="Geocode"><i class="fas fa-search-location"></i></button>
-      <select class="fi" onchange="setMapStyle(this.value)" title="Map Style"><option value="osm">Street</option><option value="carto">Night Streets</option><option value="satellite">Satellite</option><option value="topo">Topo</option></select>
+      <select class="fi" id="mapStyleSelect" onchange="setMapStyle(this.value)" title="Map Style"><option value="osm">Street</option><option value="carto">Night Streets</option><option value="satellite">Satellite</option><option value="topo">Topo</option></select>
       <button class="fbtn" id="bulkDeleteBtn" onclick="bulkDelete()" style="display:none;color:#ef4444;"><i class="fas fa-trash"></i> Delete</button>
       <button class="fbtn" id="bulkExportBtn" onclick="bulkExport()" style="display:none;"><i class="fas fa-file-export"></i> Export</button>
     </div>
@@ -4129,6 +4197,929 @@ function editCust(i){ editCustIdx=i; const c=_customers[i]; cf_name.value=c.name
 function saveCustForm(){ const o={name:cf_name.value.trim(),phone:cf_phone.value.trim(),email:cf_email.value.trim(),budget:cf_budget.value.trim(),location:cf_location.value.trim(),type:cf_type.value.trim(),requirements:cf_req.value.trim()}; if(!o.name){alert('Name required');return;} if(editCustIdx>=0)_customers[editCustIdx]=o; else _customers.push(o); localStorage.setItem('crm_customers',JSON.stringify(_customers)); cancelCustForm(); renderCusts(); if(typeof populateContactDropdowns==='function')populateContactDropdowns(); }
 function cancelCustForm(){ document.getElementById('custForm').classList.add('hidden'); }
 function delCust(i){ if(confirm('Delete?')){ _customers.splice(i,1); localStorage.setItem('crm_customers',JSON.stringify(_customers)); renderCusts(); } }
+
+/* ═══════════════════════════════════════════════════════════════
+   MULTILINGUAL SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+var _currentLang = localStorage.getItem('xp_lang') || 'en';
+
+var _TRANS = {
+  en: {
+    /* topbar */
+    searchPlaceholder:'Search plots...', newPlot:'New Plot',
+    /* filter bar */
+    allStatus:'All Status', available:'Available', reserved:'Reserved', sold:'Sold',
+    allTypes:'All Types', residential:'Residential', commercial:'Commercial',
+    mixedUse:'Mixed Use', industrial:'Industrial', agricultural:'Agricultural',
+    sizeLabel:'SIZE (sqft)', priceLabel:'PRICE (AED)', gfaLabel:'GFA', clearBtn:'Clear',
+    street:'Street', nightStreets:'Night Streets', satellite:'Satellite', topo:'Topo',
+    /* sidebar sections */
+    sViews:'Views', sAnalysis:'Analysis', sData:'Data', sContacts:'Contacts', sAccount:'Account',
+    mapView:'Map View', tableView:'Table View',
+    heatmap:'Heatmap', bufferAnalysis:'Buffer Analysis', distanceTool:'Distance Tool', areaMeasure:'Area Measure',
+    importPlots:'Import Plots', exportCsv:'Export CSV', crmLabel:'CRM',
+    agents:'Agents', developers:'Developers', owners:'Owners', customers:'Customers',
+    offlineSync:'Offline Sync', resolveGps:'Resolve GPS URLs', setOwnerCode:'Set Owner Code',
+    dashboard:'Dashboard', onlineSync:'Online Sync', logout:'Logout',
+    propIntel:'Property Intelligence',
+    /* map controls */
+    buffer:'Buffer', distance:'Distance', amenities:'Amenities', calendar:'Calendar', aiLabel:'AI',
+    /* legend */
+    legendTitle:'LEGEND',
+    /* table headers */
+    thPlotNo:'Plot No', thDevelopment:'Development', thType:'Type', thSize:'Size',
+    thPrice:'Price (AED)', thPriceSqft:'Price/sqft', thStatus:'Status', thActions:'Actions',
+    /* mobile nav */
+    mnMap:'Map', mnTable:'Table', mnImport:'Import', mnMore:'More',
+    /* plot modal sections */
+    mBasic:'Basic Information', mPeople:'People & Contacts', mFinancial:'Financial',
+    mMetrics:'Area Metrics (Optional)', mLocation:'Location (GPS)', mMedia:'Media',
+    mUnido:'UNIDO Feasibility', mNotes:'Notes',
+    /* plot modal buttons */
+    mCancel:'Cancel', mUnidoPreview:'UNIDO Preview', mSave:'Save Plot',
+    /* plot modal placeholders */
+    phPlotNo:'e.g. PLT-001', phDev:'e.g. Breza Hills', phAgent:'Agent name',
+    phPhone:'+971...', phDevContact:'Developer contact', phOwner:'Owner name',
+    phCustomer:'Customer name', phSize:'e.g. 500', phPrice:'e.g. 2500000',
+    phGfa:'Gross Floor Area', phNfa:'Net Floor Area', phFar:'Floor Area Ratio',
+    phBua:'Built-Up Area', phLat:'e.g. 25.2048', phLng:'e.g. 55.2708',
+    phVideo:'https://youtube.com/...', phUnidoNotes:'Client requirements, target use...',
+    phNotes:'Additional notes...',
+    /* login */
+    signIn:'Sign In', continueGuest:'Continue as Guest', signInAccount:'Sign in to your account',
+    /* chat */
+    aiTitle:'XP HOMES AI', aiSub:'Property Intelligence Assistant',
+    aiPlaceholder:'Ask about plots, prices, availability...',
+    aiWelcome:'Hello! I\'m your XP HOMES AI. I can search plots, fill form fields, check prices and availability. Try "open plot form", "fill plot number PLT-001", or "how many available?". How can I help?',
+    voiceStart:'Listening...', voiceStop:'Voice search'
+  },
+  ar: {
+    searchPlaceholder:'البحث في القطع...', newPlot:'قطعة جديدة',
+    allStatus:'جميع الحالات', available:'متاح', reserved:'محجوز', sold:'مباع',
+    allTypes:'جميع الأنواع', residential:'سكني', commercial:'تجاري',
+    mixedUse:'متعدد الاستخدام', industrial:'صناعي', agricultural:'زراعي',
+    sizeLabel:'المساحة (قدم²)', priceLabel:'السعر (درهم)', gfaLabel:'إجمالي المساحة', clearBtn:'مسح',
+    street:'شوارع', nightStreets:'شوارع ليلية', satellite:'قمر صناعي', topo:'طوبوغرافي',
+    sViews:'العروض', sAnalysis:'التحليل', sData:'البيانات', sContacts:'جهات الاتصال', sAccount:'الحساب',
+    mapView:'عرض الخريطة', tableView:'عرض الجدول',
+    heatmap:'خريطة الحرارة', bufferAnalysis:'تحليل النطاق', distanceTool:'أداة المسافة', areaMeasure:'قياس المساحة',
+    importPlots:'استيراد القطع', exportCsv:'تصدير CSV', crmLabel:'إدارة العملاء',
+    agents:'الوكلاء', developers:'المطورون', owners:'الملاك', customers:'العملاء',
+    offlineSync:'مزامنة بدون إنترنت', resolveGps:'حل روابط GPS', setOwnerCode:'كود المالك',
+    dashboard:'لوحة التحكم', onlineSync:'مزامنة عبر الإنترنت', logout:'تسجيل خروج',
+    propIntel:'ذكاء العقارات',
+    buffer:'نطاق', distance:'مسافة', amenities:'مرافق', calendar:'تقويم', aiLabel:'ذكاء',
+    legendTitle:'وسيلة الإيضاح',
+    thPlotNo:'رقم القطعة', thDevelopment:'المشروع', thType:'النوع', thSize:'المساحة',
+    thPrice:'السعر (درهم)', thPriceSqft:'سعر/قدم²', thStatus:'الحالة', thActions:'إجراءات',
+    mnMap:'خريطة', mnTable:'جدول', mnImport:'استيراد', mnMore:'المزيد',
+    mBasic:'المعلومات الأساسية', mPeople:'الأشخاص وجهات الاتصال', mFinancial:'المالية',
+    mMetrics:'مقاييس المساحة', mLocation:'الموقع (GPS)', mMedia:'الوسائط',
+    mUnido:'جدوى UNIDO', mNotes:'ملاحظات',
+    mCancel:'إلغاء', mUnidoPreview:'معاينة UNIDO', mSave:'حفظ القطعة',
+    phPlotNo:'مثال: PLT-001', phDev:'مثال: بريزا هيلز', phAgent:'اسم الوكيل',
+    phPhone:'+971...', phDevContact:'جهة اتصال المطور', phOwner:'اسم المالك',
+    phCustomer:'اسم العميل', phSize:'مثال: 500', phPrice:'مثال: 2500000',
+    phGfa:'إجمالي مساحة الأرضية', phNfa:'صافي مساحة الأرضية', phFar:'نسبة مساحة الأرضية',
+    phBua:'المساحة المبنية', phLat:'مثال: 25.2048', phLng:'مثال: 55.2708',
+    phVideo:'https://youtube.com/...', phUnidoNotes:'متطلبات العميل...',
+    phNotes:'ملاحظات إضافية...',
+    signIn:'تسجيل الدخول', continueGuest:'المتابعة كضيف', signInAccount:'تسجيل الدخول إلى حسابك',
+    aiTitle:'مساعد XP HOMES', aiSub:'مساعد ذكاء عقاري',
+    aiPlaceholder:'اسأل أو قل: "افتح نموذج قطعة"، "كم عدد المتاحة؟"',
+    aiWelcome:'مرحباً! أنا مساعد XP HOMES. يمكنني البحث عن القطع وملء الحقول والإجابة على الأسئلة. كيف يمكنني مساعدتك؟',
+    voiceStart:'جارٍ الاستماع...', voiceStop:'البحث الصوتي'
+  },
+  bs: {
+    searchPlaceholder:'Pretraži parcele...', newPlot:'Nova Parcela',
+    allStatus:'Svi Statusi', available:'Slobodno', reserved:'Rezervisano', sold:'Prodano',
+    allTypes:'Svi Tipovi', residential:'Stambeno', commercial:'Poslovno',
+    mixedUse:'Mješovito', industrial:'Industrijsko', agricultural:'Poljoprivredno',
+    sizeLabel:'VELIČINA (sqft)', priceLabel:'CIJENA (AED)', gfaLabel:'BRP', clearBtn:'Obriši',
+    street:'Ulice', nightStreets:'Noćne ulice', satellite:'Satelit', topo:'Topografija',
+    sViews:'Pregledi', sAnalysis:'Analiza', sData:'Podaci', sContacts:'Kontakti', sAccount:'Račun',
+    mapView:'Prikaz Karte', tableView:'Prikaz Tabele',
+    heatmap:'Toplotna Mapa', bufferAnalysis:'Analiza Tampona', distanceTool:'Alat za udaljenost', areaMeasure:'Mjerenje Površine',
+    importPlots:'Uvoz Parcela', exportCsv:'Izvoz CSV', crmLabel:'CRM',
+    agents:'Agenti', developers:'Developeri', owners:'Vlasnici', customers:'Kupci',
+    offlineSync:'Offline Sinkronizacija', resolveGps:'Razriješi GPS URL', setOwnerCode:'Kod Vlasnika',
+    dashboard:'Nadzorna Ploča', onlineSync:'Online Sinkronizacija', logout:'Odjava',
+    propIntel:'Inteligencija Nekretnina',
+    buffer:'Tampon', distance:'Udaljenost', amenities:'Pogodnosti', calendar:'Kalendar', aiLabel:'AI',
+    legendTitle:'LEGENDA',
+    thPlotNo:'Br. Parcele', thDevelopment:'Projekt', thType:'Tip', thSize:'Veličina',
+    thPrice:'Cijena (AED)', thPriceSqft:'Cijena/sqft', thStatus:'Status', thActions:'Akcije',
+    mnMap:'Karta', mnTable:'Tabela', mnImport:'Uvoz', mnMore:'Više',
+    mBasic:'Osnovne Informacije', mPeople:'Osobe i Kontakti', mFinancial:'Financije',
+    mMetrics:'Metrički Podaci', mLocation:'Lokacija (GPS)', mMedia:'Mediji',
+    mUnido:'UNIDO Izvedivost', mNotes:'Bilješke',
+    mCancel:'Otkaži', mUnidoPreview:'UNIDO Pregled', mSave:'Spremi Parcelu',
+    phPlotNo:'npr. PLT-001', phDev:'npr. Breza Hills', phAgent:'Ime agenta',
+    phPhone:'+387...', phDevContact:'Kontakt developera', phOwner:'Ime vlasnika',
+    phCustomer:'Ime kupca', phSize:'npr. 500', phPrice:'npr. 2500000',
+    phGfa:'Brutto Površina', phNfa:'Netto Površina', phFar:'Omjer Površine',
+    phBua:'Izgrađena Površina', phLat:'npr. 44.0', phLng:'npr. 17.9',
+    phVideo:'https://youtube.com/...', phUnidoNotes:'Zahtjevi klijenta...',
+    phNotes:'Dodatne bilješke...',
+    signIn:'Prijavi se', continueGuest:'Nastavi kao Gost', signInAccount:'Prijavite se na vaš račun',
+    aiTitle:'XP HOMES AI', aiSub:'Asistent za nekretnine',
+    aiPlaceholder:'Pitajte ili recite: "otvori formu", "koliko slobodnih?"',
+    aiWelcome:'Zdravo! Ja sam XP HOMES AI. Mogu pronaći parcele, popuniti polja i odgovoriti na pitanja. Kako mogu pomoći?',
+    voiceStart:'Slušam...', voiceStop:'Glasovna pretraga'
+  },
+  ru:{
+    searchPlaceholder:'Поиск участков...', newPlot:'Новый участок',
+    allStatus:'Все статусы', available:'Доступно', reserved:'Зарезервировано', sold:'Продано',
+    allTypes:'Все типы', residential:'Жилой', commercial:'Коммерческий',
+    mixedUse:'Смешанное', industrial:'Промышленный', agricultural:'С/х',
+    sizeLabel:'ПЛОЩАДЬ (кв.фут)', priceLabel:'ЦЕНА (AED)', gfaLabel:'ОПЗ', clearBtn:'Очистить',
+    street:'Улицы', nightStreets:'Ночные улицы', satellite:'Спутник', topo:'Топография',
+    sViews:'Просмотры', sAnalysis:'Анализ', sData:'Данные', sContacts:'Контакты', sAccount:'Аккаунт',
+    mapView:'Карта', tableView:'Таблица',
+    heatmap:'Тепловая карта', bufferAnalysis:'Анализ буфера', distanceTool:'Расстояние', areaMeasure:'Площадь',
+    importPlots:'Импорт участков', exportCsv:'Экспорт CSV', crmLabel:'CRM',
+    agents:'Агенты', developers:'Застройщики', owners:'Владельцы', customers:'Клиенты',
+    offlineSync:'Офлайн синхр.', resolveGps:'GPS URL', setOwnerCode:'Код владельца',
+    dashboard:'Панель управления', onlineSync:'Онлайн синхр.', logout:'Выход',
+    propIntel:'Аналитика недвижимости',
+    buffer:'Буфер', distance:'Расстояние', amenities:'Удобства', calendar:'Календарь', aiLabel:'ИИ',
+    legendTitle:'ЛЕГЕНДА',
+    thPlotNo:'№ Участка', thDevelopment:'Проект', thType:'Тип', thSize:'Площадь',
+    thPrice:'Цена (AED)', thPriceSqft:'Цена/кв.ф', thStatus:'Статус', thActions:'Действия',
+    mnMap:'Карта', mnTable:'Таблица', mnImport:'Импорт', mnMore:'Ещё',
+    mBasic:'Основная информация', mPeople:'Люди и контакты', mFinancial:'Финансы',
+    mMetrics:'Метрики площади', mLocation:'Местоположение (GPS)', mMedia:'Медиа',
+    mUnido:'ТЭО UNIDO', mNotes:'Заметки',
+    mCancel:'Отмена', mUnidoPreview:'Просмотр UNIDO', mSave:'Сохранить участок',
+    phPlotNo:'напр. PLT-001', phDev:'напр. Breza Hills', phAgent:'Имя агента',
+    phPhone:'+7...', phDevContact:'Контакт застройщика', phOwner:'Имя владельца',
+    phCustomer:'Имя клиента', phSize:'напр. 500', phPrice:'напр. 2500000',
+    phGfa:'Общая площадь здания', phNfa:'Чистая площадь', phFar:'Коэффициент застройки',
+    phBua:'Застроенная площадь', phLat:'напр. 55.7558', phLng:'напр. 37.6176',
+    phVideo:'https://youtube.com/...', phUnidoNotes:'Требования клиента...',
+    phNotes:'Дополнительные заметки...',
+    signIn:'Войти', continueGuest:'Продолжить как гость', signInAccount:'Войдите в аккаунт',
+    aiTitle:'XP HOMES ИИ', aiSub:'Аналитик недвижимости',
+    aiPlaceholder:'Спросите об участках, ценах, доступности...',
+    aiWelcome:'Привет! Я ваш ИИ XP HOMES. Ищу участки, заполняю поля. Попробуйте: "открыть форму", "сколько доступных?".',
+    voiceStart:'Слушаю...', voiceStop:'Голосовой поиск'
+  }
+};
+
+function t(key){ return (_TRANS[_currentLang]||_TRANS.en)[key] || (_TRANS.en)[key] || key; }
+
+function _tx(el, text){ if(el) el.textContent = text; }
+function _txHTML(el, html){ if(el) el.innerHTML = html; }
+function _txPH(id, key){ var el=document.getElementById(id); if(el) el.placeholder=t(key); }
+function _txOpt(selectId, optVal, key){ var s=document.getElementById(selectId); if(!s)return; Array.from(s.options).forEach(function(o){ if(o.value===optVal) o.text=t(key); }); }
+function _txNavItem(id, icon, key){ var el=document.getElementById(id); if(!el)return; el.innerHTML='<i class="'+icon+'"></i> '+t(key); }
+
+function _setLang(lang){
+  _currentLang = lang;
+  localStorage.setItem('xp_lang', lang);
+  var ls=document.getElementById('langSelect'); if(ls) ls.value=lang;
+  document.body.classList.toggle('rtl', lang==='ar');
+  document.documentElement.lang = lang;
+
+  /* ── Topbar ── */
+  _txPH('searchInput','searchPlaceholder');
+  var nb=document.querySelector('.ibtnp'); if(nb) nb.innerHTML='<i class="fas fa-plus"></i> '+t('newPlot');
+
+  /* ── Sidebar brand ── */
+  var ssub=document.querySelector('.sbsub'); if(ssub) ssub.textContent=t('propIntel');
+
+  /* ── Sidebar nav sections ── */
+  document.querySelectorAll('.sbsec').forEach(function(s){
+    var txt=s.textContent.trim();
+    var map={'Views':'sViews','Analysis':'sAnalysis','Data':'sData','Contacts':'sContacts','Account':'sAccount',
+             'العروض':'sViews','التحليل':'sAnalysis','البيانات':'sData','جهات الاتصال':'sContacts','الحساب':'sAccount',
+             'Pregledi':'sViews','Analiza':'sAnalysis','Podaci':'sData','Kontakti':'sContacts','Račun':'sAccount',
+             'Просмотры':'sViews','Анализ':'sAnalysis','Данные':'sData','Контакты':'sContacts','Аккаунт':'sAccount'};
+    var found=false; Object.keys(map).forEach(function(k){ if(txt.indexOf(k)>=0&&!found){ s.textContent=t(map[k]); found=true; } });
+  });
+
+  /* ── Sidebar nav items ── */
+  _txNavItem('nav-map','fas fa-map','mapView');
+  _txNavItem('nav-table','fas fa-table','tableView');
+
+  /* ── Filter bar status options ── */
+  _txOpt('filterStatus','','allStatus');
+  _txOpt('filterStatus','Available','available');
+  _txOpt('filterStatus','Reserved','reserved');
+  _txOpt('filterStatus','Sold','sold');
+
+  /* ── Filter bar type options ── */
+  _txOpt('filterType','','allTypes');
+  _txOpt('filterType','Residential','residential');
+  _txOpt('filterType','Commercial','commercial');
+  _txOpt('filterType','Mixed Use','mixedUse');
+  _txOpt('filterType','Industrial','industrial');
+  _txOpt('filterType','Agricultural','agricultural');
+
+  /* ── Filter bar map style options ── */
+  _txOpt('mapStyleSelect','osm','street');
+  _txOpt('mapStyleSelect','carto','nightStreets');
+  _txOpt('mapStyleSelect','satellite','satellite');
+  _txOpt('mapStyleSelect','topo','topo');
+
+  /* ── Filter bar labels ── */
+  document.querySelectorAll('[data-lang-key]').forEach(function(el){ el.textContent=t(el.getAttribute('data-lang-key')); });
+
+  /* ── Table headers ── */
+  var ths=document.querySelectorAll('#plotTable th, #plotsTable th');
+  var thKeys=['thPlotNo','thDevelopment','thType','thSize','thPrice','thPriceSqft','thStatus','thActions'];
+  ths.forEach(function(th,i){ if(thKeys[i]) th.textContent=t(thKeys[i]); });
+
+  /* ── Plot modal section labels ── */
+  var sectKeys=['mBasic','mPeople','mFinancial','mMetrics','mLocation','mMedia','mUnido','mNotes'];
+  document.querySelectorAll('#plotModal .fsectitle').forEach(function(el,i){ if(sectKeys[i]) el.textContent=t(sectKeys[i]); });
+
+  /* ── Plot modal buttons ── */
+  var btnCancel=document.querySelector('#plotModal .btn.btns'); if(btnCancel) btnCancel.textContent=t('mCancel');
+  document.querySelectorAll('#plotModal .btn.btns').forEach(function(b,i){ if(i===1) b.innerHTML='<i class="fas fa-chart-line" style="margin-right:6px;"></i>'+t('mUnidoPreview'); });
+  var btnSave=document.querySelector('#plotModal .btn.btnp'); if(btnSave) btnSave.innerHTML='<i class="fas fa-save" style="margin-right:6px;"></i>'+t('mSave');
+
+  /* ── Plot modal select options ── */
+  _txOpt('pm_status','Available','available'); _txOpt('pm_status','Reserved','reserved'); _txOpt('pm_status','Sold','sold');
+  _txOpt('pm_type','Residential','residential'); _txOpt('pm_type','Commercial','commercial');
+  _txOpt('pm_type','Mixed Use','mixedUse'); _txOpt('pm_type','Industrial','industrial'); _txOpt('pm_type','Agricultural','agricultural');
+
+  /* ── Plot modal placeholders ── */
+  _txPH('pm_no','phPlotNo'); _txPH('pm_dev','phDev');
+  _txPH('pm_agentName','phAgent'); _txPH('pm_agentContact','phPhone');
+  _txPH('pm_devContactName','phDevContact'); _txPH('pm_devContact','phPhone');
+  _txPH('pm_ownerName','phOwner'); _txPH('pm_ownerContact','phPhone');
+  _txPH('pm_customerName','phCustomer'); _txPH('pm_customerContact','phPhone');
+  _txPH('pm_size','phSize'); _txPH('pm_price','phPrice');
+  _txPH('pm_gfa','phGfa'); _txPH('pm_nfa','phNfa'); _txPH('pm_far','phFar'); _txPH('pm_bua','phBua');
+  _txPH('pm_lat','phLat'); _txPH('pm_lng','phLng');
+  _txPH('pm_video','phVideo'); _txPH('pm_unidoNotes','phUnidoNotes'); _txPH('pm_notes','phNotes');
+
+  /* ── AI Chat ── */
+  _tx(document.getElementById('chatTitle'), t('aiTitle'));
+  _tx(document.getElementById('chatSub'), t('aiSub'));
+  _txPH('aiChatInput','aiPlaceholder');
+
+  /* ── Login ── */
+  _tx(document.getElementById('loginSubtitle'), t('signInAccount'));
+
+  
+  // === DOM AUTO-TRANSLATION (ALL LANGUAGES) ===
+  if(!window._xpAutoTransInit) {
+      window._xpAutoTransInit = true;
+
+      // Ensure _TRANS exists
+      if(typeof _TRANS === 'undefined') window._TRANS = {};
+
+      // 1. ADD FULL NEW LANGUAGES (FR & DE)
+      _TRANS.fr = {
+        searchPlaceholder:'Rechercher des parcelles...', newPlot:'Nouvelle Parcelle',
+        allStatus:'Tous les statuts', available:'Disponible', reserved:'Réservé', sold:'Vendu',
+        allTypes:'Tous les types', residential:'Résidentiel', commercial:'Commercial',
+        mixedUse:'Usage Mixte', industrial:'Industriel', agricultural:'Agricole',
+        sizeLabel:'TAILLE (sqft)', priceLabel:'PRIX (AED)', gfaLabel:'SBA', clearBtn:'Effacer',
+        street:'Rue', nightStreets:'Rues Nuit', satellite:'Satellite', topo:'Topo',
+        sViews:'Vues', sAnalysis:'Analyse', sData:'Données', sContacts:'Contacts', sAccount:'Compte',
+        mapView:'Vue Carte', tableView:'Vue Tableau',
+        heatmap:'Carte Thermique', bufferAnalysis:'Analyse de Zone', distanceTool:'Outil Distance', areaMeasure:'Mesure de Surface',
+        importPlots:'Importer Parcelles', exportCsv:'Exporter CSV', crmLabel:'CRM',
+        agents:'Agents', developers:'Développeurs', owners:'Propriétaires', customers:'Clients',
+        offlineSync:'Synchro Hors-ligne', resolveGps:'Résoudre les URL GPS', setOwnerCode:'Code Propriétaire',
+        dashboard:'Tableau de Bord', onlineSync:'Synchro en Ligne', logout:'Déconnexion',
+        propIntel:'Intelligence Immobilière',
+        buffer:'Zone', distance:'Distance', amenities:'Commodités', calendar:'Calendrier', aiLabel:'IA',
+        legendTitle:'LÉGENDE',
+        thPlotNo:'N° Parcelle', thDevelopment:'Développement', thType:'Type', thSize:'Taille',
+        thPrice:'Prix (AED)', thPriceSqft:'Prix/sqft', thStatus:'Statut', thActions:'Actions',
+        mnMap:'Carte', mnTable:'Tableau', mnImport:'Importer', mnMore:'Plus',
+        mBasic:'Informations de Base', mPeople:'Personnes et Contacts', mFinancial:'Financier',
+        mMetrics:'Métriques de Surface (Optionnel)', mLocation:'Emplacement (GPS)', mMedia:'Médias',
+        mUnido:'Faisabilité UNIDO', mNotes:'Notes',
+        mCancel:'Annuler', mUnidoPreview:'Aperçu UNIDO', mSave:'Enregistrer',
+        phPlotNo:'ex. PLT-001', phDev:'ex. Breza Hills', phAgent:'Nom de l\'agent',
+        phPhone:'+971...', phDevContact:'Contact développeur', phOwner:'Nom du propriétaire',
+        phCustomer:'Nom du client', phSize:'ex. 500', phPrice:'ex. 2500000',
+        phGfa:'Surface Brute', phNfa:'Surface Nette', phFar:'Ratio de Surface',
+        phBua:'Surface Construite', phLat:'ex. 25.2048', phLng:'ex. 55.2708',
+        phVideo:'https://youtube.com/...', phUnidoNotes:'Besoins du client...',
+        phNotes:'Notes additionnelles...',
+        signIn:'Se connecter', continueGuest:'Continuer comme invité', signInAccount:'Connectez-vous',
+        aiTitle:'XP HOMES IA', aiSub:'Assistant Immobilier',
+        aiPlaceholder:'Demandez sur les prix, dispos...',
+        aiWelcome:'Bonjour! Je suis l\'IA XP HOMES. Comment puis-je aider?',
+        voiceStart:'Écoute...', voiceStop:'Recherche vocale'
+      };
+
+      _TRANS.de = {
+        searchPlaceholder:'Grundstücke suchen...', newPlot:'Neues Grundstück',
+        allStatus:'Alle Status', available:'Verfügbar', reserved:'Reserviert', sold:'Verkauft',
+        allTypes:'Alle Typen', residential:'Wohnen', commercial:'Gewerbe',
+        mixedUse:'Mischnutzung', industrial:'Industrie', agricultural:'Landwirtschaft',
+        sizeLabel:'GRÖßE (sqft)', priceLabel:'PREIS (AED)', gfaLabel:'BGF', clearBtn:'Löschen',
+        street:'Straße', nightStreets:'Nachtstraßen', satellite:'Satellit', topo:'Topo',
+        sViews:'Ansichten', sAnalysis:'Analyse', sData:'Daten', sContacts:'Kontakte', sAccount:'Konto',
+        mapView:'Kartenansicht', tableView:'Tabellenansicht',
+        heatmap:'Heatmap', bufferAnalysis:'Pufferanalyse', distanceTool:'Entfernungstool', areaMeasure:'Flächenmessung',
+        importPlots:'Importieren', exportCsv:'CSV exportieren', crmLabel:'CRM',
+        agents:'Makler', developers:'Bauträger', owners:'Eigentümer', customers:'Kunden',
+        offlineSync:'Offline-Sync', resolveGps:'GPS-URLs auflösen', setOwnerCode:'Eigentümercode',
+        dashboard:'Dashboard', onlineSync:'Online-Sync', logout:'Abmelden',
+        propIntel:'Immobilien-Intelligenz',
+        buffer:'Puffer', distance:'Entfernung', amenities:'Ausstattung', calendar:'Kalender', aiLabel:'KI',
+        legendTitle:'LEGENDE',
+        thPlotNo:'Grundstück Nr.', thDevelopment:'Projekt', thType:'Typ', thSize:'Größe',
+        thPrice:'Preis (AED)', thPriceSqft:'Preis/sqft', thStatus:'Status', thActions:'Aktionen',
+        mnMap:'Karte', mnTable:'Tabelle', mnImport:'Importieren', mnMore:'Mehr',
+        mBasic:'Grundlegende Infos', mPeople:'Personen & Kontakte', mFinancial:'Finanzen',
+        mMetrics:'Flächenmetriken (Optional)', mLocation:'Standort (GPS)', mMedia:'Medien',
+        mUnido:'UNIDO-Machbarkeit', mNotes:'Notizen',
+        mCancel:'Abbrechen', mUnidoPreview:'UNIDO-Vorschau', mSave:'Speichern',
+        phPlotNo:'z.B. PLT-001', phDev:'z.B. Breza Hills', phAgent:'Maklername',
+        phPhone:'+971...', phDevContact:'Bauträgerkontakt', phOwner:'Eigentümername',
+        phCustomer:'Kundenname', phSize:'z.B. 500', phPrice:'z.B. 2500000',
+        phGfa:'Bruttogeschossfläche', phNfa:'Nettogeschossfläche', phFar:'Geschossflächenzahl',
+        phBua:'Bebaute Fläche', phLat:'z.B. 25.2048', phLng:'z.B. 55.2708',
+        phVideo:'https://youtube.com/...', phUnidoNotes:'Kundenanforderungen...',
+        phNotes:'Zusätzliche Notizen...',
+        signIn:'Anmelden', continueGuest:'Als Gast fortfahren', signInAccount:'Beim Konto anmelden',
+        aiTitle:'XP HOMES KI', aiSub:'Immobilien-Assistent',
+        aiPlaceholder:'Fragen zu Preisen, Verfügbarkeit...',
+        aiWelcome:'Hallo! Ich bin die XP HOMES KI. Wie kann ich helfen?',
+        voiceStart:'Höre zu...', voiceStop:'Sprachsuche'
+      };
+
+      // 2. EXTRA TRANSLATIONS FOR DYNAMIC FIELDS
+      var extra_en = {
+        lblPriceAed: "Price (AED)", lblLatitude: "Latitude", lblRoomCode: "Room Code",
+        lblPlotPhoto: "Plot Photo", lblVideoTourUrl: "Video Tour URL", lblFeasibilityNotes: "Feasibility Notes",
+        lblSentTo: "Sent To", lblNotes: "Notes", lblContactNumber: "Contact Number", lblNextAction: "Next Action",
+        lblDealStage: "Deal Stage", lblName: "Name", lblOwnerName: "Owner Name", lblReplaceExistingPlots: "Replace existing plots",
+        lblDueDate: "Due Date", lblSelectAll: "Select All", lblFar: "FAR", lblFollowUpType: "Follow Up Type",
+        lblPhone: "Phone", lblContactName: "Contact Name", lblPlotNumber: "Plot Number", lblStudyStage: "Study Stage",
+        lblLongitude: "Longitude", lblNfaSqft: "NFA (sqft)", lblResultNotes: "Result Notes",
+        lblFeasibilityRequirement: "Feasibility Requirement", lblPriority: "Priority", lblContact: "Contact",
+        lblSentDate: "Sent Date", lblCustomerName: "Customer Name", lblGfaSqft: "GFA (sqft)",
+        lblDevelopment: "Development", lblPlotNo: "Plot No", lblChannel: "Channel", lblContactPerson: "Contact Person",
+        lblType: "Type", lblStatus: "Status", lblSizeSqft: "Size (sqft)", lblBuaSqft: "BUA (sqft)",
+        lblResult: "Result", lblSentBy: "Sent By", lblAgent: "Agent", lblDeveloper: "Developer",
+        lblOwner: "Owner", lblCustomer: "Customer", lblEmail: "Email", lblWebsite: "Website",
+        lblProjects: "Projects", lblNationality: "Nationality", lblPassport: "Passport", lblAddress: "Address",
+        lblEid: "EID", lblBudget: "Budget", lblLocation: "Location", lblRequirements: "Requirements",
+        lblCompany: "Company", lblLicense: "License", lblSpecialization: "Specialization",
+        lblEdit: "Edit", lblDel: "Del", lblClose: "Close", lblSave: "Save",
+        lblAddAgent: "Add Agent", lblAddDev: "Add Developer", lblAddOwner: "Add Owner", lblAddCust: "Add Customer",
+        lblQuickAdd: "Quick Add", lblDirectory: "Directory",
+        lblPrice: "Price", lblAedSq: "AED/sq", lblSqft: "Sqft",
+        lblApproxLoc: "Approximate location", lblStatusUpper: "STATUS",
+        lblShare: "Share", lblDetails: "Details", lblImprove: "Improve",
+        lblApproxCity: "plots show at approximate city location",
+        lblLegend: "LEGEND", lblAvailableCount: "Available", lblReservedCount: "Reserved", lblSoldCount: "Sold",
+        lblHeatmap: "Heatmap", lblBufferAnalysis: "Buffer Analysis", lblDistanceTool: "Distance Tool",
+        lblAreaMeasure: "Area Measure", lblImportPlots: "Import Plots", lblExportCsv: "Export CSV",
+        lblAgents: "Agents", lblDevelopers: "Developers", lblOwners: "Owners", lblCustomers: "Customers"
+      };
+
+      var extra_ar = {
+        lblPriceAed: "السعر (درهم)", lblLatitude: "خط العرض", lblRoomCode: "رمز الغرفة",
+        lblPlotPhoto: "صورة القطعة", lblVideoTourUrl: "رابط جولة الفيديو", lblFeasibilityNotes: "ملاحظات الجدوى",
+        lblSentTo: "أرسل إلى", lblNotes: "ملاحظات", lblContactNumber: "رقم الاتصال", lblNextAction: "الإجراء التالي",
+        lblDealStage: "مرحلة الصفقة", lblName: "الاسم", lblOwnerName: "اسم المالك", lblReplaceExistingPlots: "استبدال القطع الحالية",
+        lblDueDate: "تاريخ الاستحقاق", lblSelectAll: "تحديد الكل", lblFar: "نسبة مساحة الأرضية", lblFollowUpType: "نوع المتابعة",
+        lblPhone: "هاتف", lblContactName: "اسم جهة الاتصال", lblPlotNumber: "رقم القطعة", lblStudyStage: "مرحلة الدراسة",
+        lblLongitude: "خط الطول", lblNfaSqft: "صافي المساحة", lblResultNotes: "ملاحظات النتيجة",
+        lblFeasibilityRequirement: "متطلبات الجدوى", lblPriority: "الأولوية", lblContact: "جهة الاتصال",
+        lblSentDate: "تاريخ الإرسال", lblCustomerName: "اسم العميل", lblGfaSqft: "إجمالي المساحة",
+        lblDevelopment: "المشروع", lblPlotNo: "رقم القطعة", lblChannel: "القناة", lblContactPerson: "شخص الاتصال",
+        lblType: "النوع", lblStatus: "الحالة", lblSizeSqft: "المساحة (قدم²)", lblBuaSqft: "المساحة المبنية",
+        lblResult: "النتيجة", lblSentBy: "أرسلت بواسطة", lblAgent: "الوكيل", lblDeveloper: "المطور",
+        lblOwner: "المالك", lblCustomer: "العميل", lblEmail: "البريد الإلكتروني", lblWebsite: "الموقع الإلكتروني",
+        lblProjects: "المشاريع", lblNationality: "الجنسية", lblPassport: "جواز السفر", lblAddress: "العنوان",
+        lblEid: "الهوية الإماراتية", lblBudget: "الميزانية", lblLocation: "الموقع", lblRequirements: "المتطلبات",
+        lblCompany: "الشركة", lblLicense: "الرخصة", lblSpecialization: "التخصص",
+        lblEdit: "تعديل", lblDel: "حذف", lblClose: "إغلاق", lblSave: "حفظ",
+        lblAddAgent: "إضافة وكيل", lblAddDev: "إضافة مطور", lblAddOwner: "إضافة مالك", lblAddCust: "إضافة عميل",
+        lblQuickAdd: "إضافة سريعة", lblDirectory: "الدليل",
+        lblPrice: "السعر", lblAedSq: "درهم/قدم", lblSqft: "قدم²",
+        lblApproxLoc: "موقع تقريبي", lblStatusUpper: "الحالة",
+        lblShare: "مشاركة", lblDetails: "تفاصيل", lblImprove: "تحسين",
+        lblApproxCity: "تظهر القطع في موقع المدينة التقريبي",
+        lblLegend: "وسيلة الإيضاح", lblAvailableCount: "متاح", lblReservedCount: "محجوز", lblSoldCount: "مباع",
+        lblHeatmap: "خريطة حرارية", lblBufferAnalysis: "تحليل النطاق", lblDistanceTool: "أداة المسافة",
+        lblAreaMeasure: "قياس المساحة", lblImportPlots: "استيراد القطع", lblExportCsv: "تصدير CSV",
+        lblAgents: "الوكلاء", lblDevelopers: "المطورون", lblOwners: "الملاك", lblCustomers: "العملاء"
+      };
+
+      var extra_fr = {
+        lblPriceAed: "Prix (AED)", lblLatitude: "Latitude", lblRoomCode: "Code chambre",
+        lblPlotPhoto: "Photo parcelle", lblVideoTourUrl: "URL Visite Vidéo", lblFeasibilityNotes: "Notes Faisabilité",
+        lblSentTo: "Envoyé à", lblNotes: "Notes", lblContactNumber: "N° Contact", lblNextAction: "Action suivante",
+        lblDealStage: "Étape de transaction", lblName: "Nom", lblOwnerName: "Nom propriétaire", lblReplaceExistingPlots: "Remplacer parcelles",
+        lblDueDate: "Date d'échéance", lblSelectAll: "Tout sélectionner", lblFar: "FAR", lblFollowUpType: "Type de suivi",
+        lblPhone: "Téléphone", lblContactName: "Nom du contact", lblPlotNumber: "N° de parcelle", lblStudyStage: "Étape d'étude",
+        lblLongitude: "Longitude", lblNfaSqft: "NFA (sqft)", lblResultNotes: "Notes de résultat",
+        lblFeasibilityRequirement: "Besoin Faisabilité", lblPriority: "Priorité", lblContact: "Contact",
+        lblSentDate: "Date d'envoi", lblCustomerName: "Nom du client", lblGfaSqft: "SBA (sqft)",
+        lblDevelopment: "Développement", lblPlotNo: "N° Parcelle", lblChannel: "Canal", lblContactPerson: "Personne contact",
+        lblType: "Type", lblStatus: "Statut", lblSizeSqft: "Taille (sqft)", lblBuaSqft: "BUA (sqft)",
+        lblResult: "Résultat", lblSentBy: "Envoyé par", lblAgent: "Agent", lblDeveloper: "Développeur",
+        lblOwner: "Propriétaire", lblCustomer: "Client", lblEmail: "Email", lblWebsite: "Site Web",
+        lblProjects: "Projets", lblNationality: "Nationalité", lblPassport: "Passeport", lblAddress: "Adresse",
+        lblEid: "EID", lblBudget: "Budget", lblLocation: "Emplacement", lblRequirements: "Exigences",
+        lblCompany: "Entreprise", lblLicense: "Licence", lblSpecialization: "Spécialisation",
+        lblEdit: "Modifier", lblDel: "Suppr", lblClose: "Fermer", lblSave: "Enregistrer",
+        lblAddAgent: "Ajouter Agent", lblAddDev: "Ajouter Déveloper", lblAddOwner: "Ajouter Proprio", lblAddCust: "Ajouter Client",
+        lblQuickAdd: "Ajout Rapide", lblDirectory: "Annuaire",
+        lblPrice: "Prix", lblAedSq: "AED/sq", lblSqft: "Sqft",
+        lblApproxLoc: "Emplacement approx.", lblStatusUpper: "STATUT",
+        lblShare: "Partager", lblDetails: "Détails", lblImprove: "Améliorer",
+        lblApproxCity: "parcelles à l'emplacement approx.",
+        lblLegend: "LÉGENDE", lblAvailableCount: "Disponible", lblReservedCount: "Réservé", lblSoldCount: "Vendu",
+        lblHeatmap: "Carte thermique", lblBufferAnalysis: "Analyse de zone", lblDistanceTool: "Outil distance",
+        lblAreaMeasure: "Mesure surface", lblImportPlots: "Importer parcelles", lblExportCsv: "Exporter CSV",
+        lblAgents: "Agents", lblDevelopers: "Développeurs", lblOwners: "Propriétaires", lblCustomers: "Clients"
+      };
+
+      var extra_de = {
+        lblPriceAed: "Preis (AED)", lblLatitude: "Breitengrad", lblRoomCode: "Zimmercode",
+        lblPlotPhoto: "Grundstücksfoto", lblVideoTourUrl: "Video-Tour URL", lblFeasibilityNotes: "Machbarkeitsnotizen",
+        lblSentTo: "Gesendet an", lblNotes: "Notizen", lblContactNumber: "Kontaktnummer", lblNextAction: "Nächste Aktion",
+        lblDealStage: "Deal-Phase", lblName: "Name", lblOwnerName: "Eigentümername", lblReplaceExistingPlots: "Bestehende ersetzen",
+        lblDueDate: "Fälligkeitsdatum", lblSelectAll: "Alle auswählen", lblFar: "GFZ", lblFollowUpType: "Follow-up-Typ",
+        lblPhone: "Telefon", lblContactName: "Kontaktname", lblPlotNumber: "Grundstücksnummer", lblStudyStage: "Studienphase",
+        lblLongitude: "Längengrad", lblNfaSqft: "NGF (sqft)", lblResultNotes: "Ergebnisnotizen",
+        lblFeasibilityRequirement: "Machbarkeitsanforderung", lblPriority: "Priorität", lblContact: "Kontakt",
+        lblSentDate: "Sendedatum", lblCustomerName: "Kundenname", lblGfaSqft: "BGF (sqft)",
+        lblDevelopment: "Projekt", lblPlotNo: "Grundstück Nr.", lblChannel: "Kanal", lblContactPerson: "Kontaktperson",
+        lblType: "Typ", lblStatus: "Status", lblSizeSqft: "Größe (sqft)", lblBuaSqft: "Bebaut (sqft)",
+        lblResult: "Ergebnis", lblSentBy: "Gesendet von", lblAgent: "Makler", lblDeveloper: "Bauträger",
+        lblOwner: "Eigentümer", lblCustomer: "Kunde", lblEmail: "E-Mail", lblWebsite: "Website",
+        lblProjects: "Projekte", lblNationality: "Nationalität", lblPassport: "Pass", lblAddress: "Adresse",
+        lblEid: "EID", lblBudget: "Budget", lblLocation: "Standort", lblRequirements: "Anforderungen",
+        lblCompany: "Unternehmen", lblLicense: "Lizenz", lblSpecialization: "Spezialisierung",
+        lblEdit: "Bearbeiten", lblDel: "Löschen", lblClose: "Schließen", lblSave: "Speichern",
+        lblAddAgent: "Makler hinzu", lblAddDev: "Bauträger hinzu", lblAddOwner: "Eigentümer hinzu", lblAddCust: "Kunde hinzu",
+        lblQuickAdd: "Schnell hinzu", lblDirectory: "Verzeichnis",
+        lblPrice: "Preis", lblAedSq: "AED/sq", lblSqft: "Sqft",
+        lblApproxLoc: "Ungefährer Standort", lblStatusUpper: "STATUS",
+        lblShare: "Teilen", lblDetails: "Details", lblImprove: "Verbessern",
+        lblApproxCity: "Grundstücke am ungefähren Standort",
+        lblLegend: "LEGENDE", lblAvailableCount: "Verfügbar", lblReservedCount: "Reserviert", lblSoldCount: "Verkauft",
+        lblHeatmap: "Heatmap", lblBufferAnalysis: "Pufferanalyse", lblDistanceTool: "Entfernungstool",
+        lblAreaMeasure: "Flächenmessung", lblImportPlots: "Importieren", lblExportCsv: "CSV export",
+        lblAgents: "Makler", lblDevelopers: "Bauträger", lblOwners: "Eigentümer", lblCustomers: "Kunden"
+      };
+
+      var extra_bs = {
+        lblPriceAed: "Cijena (AED)", lblLatitude: "Geografska širina", lblRoomCode: "Šifra sobe",
+        lblPlotPhoto: "Fotografija parcele", lblVideoTourUrl: "URL video obilaska", lblFeasibilityNotes: "Napomene o izvodljivosti",
+        lblSentTo: "Poslano", lblNotes: "Bilješke", lblContactNumber: "Kontakt broj", lblNextAction: "Sljedeća akcija",
+        lblDealStage: "Faza dogovora", lblName: "Ime", lblOwnerName: "Ime vlasnika", lblReplaceExistingPlots: "Zamijeni postojeće",
+        lblDueDate: "Datum dospijeća", lblSelectAll: "Označi sve", lblFar: "FAR", lblFollowUpType: "Tip praćenja",
+        lblPhone: "Telefon", lblContactName: "Ime kontakta", lblPlotNumber: "Broj parcele", lblStudyStage: "Faza studije",
+        lblLongitude: "Geografska dužina", lblNfaSqft: "NFA (sqft)", lblResultNotes: "Bilješke rezultata",
+        lblFeasibilityRequirement: "Zahtjev izvodljivosti", lblPriority: "Prioritet", lblContact: "Kontakt",
+        lblSentDate: "Datum slanja", lblCustomerName: "Ime kupca", lblGfaSqft: "GFA (sqft)",
+        lblDevelopment: "Razvoj", lblPlotNo: "Broj parcele", lblChannel: "Kanal", lblContactPerson: "Kontakt osoba",
+        lblType: "Tip", lblStatus: "Status", lblSizeSqft: "Veličina (sqft)", lblBuaSqft: "BUA (sqft)",
+        lblResult: "Rezultat", lblSentBy: "Poslao", lblAgent: "Agent", lblDeveloper: "Programer",
+        lblOwner: "Vlasnik", lblCustomer: "Kupac", lblEmail: "Email", lblWebsite: "Web stranica",
+        lblProjects: "Projekti", lblNationality: "Nacionalnost", lblPassport: "Pasoš", lblAddress: "Adresa",
+        lblEid: "EID", lblBudget: "Budžet", lblLocation: "Lokacija", lblRequirements: "Zahtjevi",
+        lblCompany: "Kompanija", lblLicense: "Licenca", lblSpecialization: "Specijalizacija",
+        lblEdit: "Uredi", lblDel: "Obriši", lblClose: "Zatvori", lblSave: "Sačuvaj",
+        lblAddAgent: "Dodaj agenta", lblAddDev: "Dodaj programera", lblAddOwner: "Dodaj vlasnika", lblAddCust: "Dodaj kupca",
+        lblQuickAdd: "Brzo dodavanje", lblDirectory: "Imenik",
+        lblPrice: "Cijena", lblAedSq: "AED/sq", lblSqft: "Sqft",
+        lblApproxLoc: "Približna lokacija", lblStatusUpper: "STATUS",
+        lblShare: "Podijeli", lblDetails: "Detalji", lblImprove: "Poboljšaj",
+        lblApproxCity: "parcele na približnoj lokaciji",
+        lblLegend: "LEGENDA", lblAvailableCount: "Dostupno", lblReservedCount: "Rezervisano", lblSoldCount: "Prodano",
+        lblHeatmap: "Toplotna mapa", lblBufferAnalysis: "Analiza tampona", lblDistanceTool: "Alat za udaljenost",
+        lblAreaMeasure: "Mjerenje površine", lblImportPlots: "Uvezi parcele", lblExportCsv: "Izvezi CSV",
+        lblAgents: "Agenti", lblDevelopers: "Programeri", lblOwners: "Vlasnici", lblCustomers: "Kupci"
+      };
+
+      var extra_ru = {
+        lblPriceAed: "Цена (AED)", lblLatitude: "Широта", lblRoomCode: "Код комнаты",
+        lblPlotPhoto: "Фото участка", lblVideoTourUrl: "URL видеотура", lblFeasibilityNotes: "Заметки ТЭО",
+        lblSentTo: "Отправлено", lblNotes: "Заметки", lblContactNumber: "Контактный номер", lblNextAction: "Следующее действие",
+        lblDealStage: "Стадия сделки", lblName: "Имя", lblOwnerName: "Имя владельца", lblReplaceExistingPlots: "Заменить участки",
+        lblDueDate: "Срок выполнения", lblSelectAll: "Выбрать все", lblFar: "FAR", lblFollowUpType: "Тип",
+        lblPhone: "Телефон", lblContactName: "Контактное лицо", lblPlotNumber: "Номер участка", lblStudyStage: "Стадия изучения",
+        lblLongitude: "Долгота", lblNfaSqft: "NFA (кв.футы)", lblResultNotes: "Результаты",
+        lblFeasibilityRequirement: "Требования к ТЭО", lblPriority: "Приоритет", lblContact: "Контакт",
+        lblSentDate: "Дата отправки", lblCustomerName: "Имя клиента", lblGfaSqft: "GFA (кв.футы)",
+        lblDevelopment: "Развитие", lblPlotNo: "№ Участка", lblChannel: "Канал", lblContactPerson: "Контактное лицо",
+        lblType: "Тип", lblStatus: "Статус", lblSizeSqft: "Размер (кв.футы)", lblBuaSqft: "BUA (кв.футы)",
+        lblResult: "Результат", lblSentBy: "Отправлено от", lblAgent: "Агент", lblDeveloper: "Застройщик",
+        lblOwner: "Владелец", lblCustomer: "Клиент", lblEmail: "Email", lblWebsite: "Сайт",
+        lblProjects: "Проекты", lblNationality: "Гражданство", lblPassport: "Паспорт", lblAddress: "Адрес",
+        lblEid: "EID", lblBudget: "Бюджет", lblLocation: "Локация", lblRequirements: "Требования",
+        lblCompany: "Компания", lblLicense: "Лицензия", lblSpecialization: "Специализация",
+        lblEdit: "Изменить", lblDel: "Удалить", lblClose: "Закрыть", lblSave: "Сохранить",
+        lblAddAgent: "Добавить агента", lblAddDev: "Добавить застройщика", lblAddOwner: "Добавить владельца", lblAddCust: "Добавить клиента",
+        lblQuickAdd: "Быстрое добавление", lblDirectory: "Справочник",
+        lblPrice: "Цена", lblAedSq: "AED/кв", lblSqft: "Кв.футы",
+        lblApproxLoc: "Примерное местоположение", lblStatusUpper: "СТАТУС",
+        lblShare: "Поделиться", lblDetails: "Детали", lblImprove: "Улучшить",
+        lblApproxCity: "участки на примерном месте",
+        lblLegend: "ЛЕГЕНДА", lblAvailableCount: "Доступно", lblReservedCount: "Зарезервировано", lblSoldCount: "Продано",
+        lblHeatmap: "Тепловая карта", lblBufferAnalysis: "Буферный анализ", lblDistanceTool: "Инструмент расстояния",
+        lblAreaMeasure: "Измерение площади", lblImportPlots: "Импорт участков", lblExportCsv: "Экспорт CSV",
+        lblAgents: "Агенты", lblDevelopers: "Застройщики", lblOwners: "Владельцы", lblCustomers: "Клиенты"
+      };
+
+      if(_TRANS.en) Object.assign(_TRANS.en, extra_en);
+      if(_TRANS.ar) Object.assign(_TRANS.ar, extra_ar);
+      if(_TRANS.fr) Object.assign(_TRANS.fr, extra_fr);
+      if(_TRANS.de) Object.assign(_TRANS.de, extra_de);
+      if(_TRANS.bs) Object.assign(_TRANS.bs, extra_bs);
+      if(_TRANS.ru) Object.assign(_TRANS.ru, extra_ru);
+
+      // 3. Build inverted map
+      window._invMap = {};
+      for(var k in _TRANS.en) {
+          if(typeof _TRANS.en[k] === 'string') {
+              var v = _TRANS.en[k].trim().replace(/\*/g, '');
+              if(v) window._invMap[v] = k;
+              window._invMap[v.toUpperCase()] = k; 
+          }
+      }
+
+      // 4. Wrapping function
+      window._wrapTextNodes = function(root) {
+          var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+          var textNodes = [];
+          var n;
+          while(n = walker.nextNode()) textNodes.push(n);
+          
+          textNodes.forEach(function(node) {
+              if(!node.nodeValue) return;
+              if(node.parentElement && node.parentElement.classList.contains('xp-translate-text')) return;
+              if(node.parentElement && ['SCRIPT', 'STYLE', 'TEXTAREA'].indexOf(node.parentElement.tagName) !== -1) return;
+              
+              var text = node.nodeValue.trim().replace(/\*/g, '').trim();
+              if(!text) return;
+
+              var matchText = text;
+              var isNumMatch = false;
+              
+              if(text.indexOf('(') !== -1 && text.indexOf(')') === text.length-1) {
+                  var pIdx = text.indexOf('(');
+                  matchText = text.substring(0, pIdx).trim();
+                  isNumMatch = true;
+              }
+              
+              if(matchText && window._invMap[matchText]) {
+                  var key = window._invMap[matchText];
+                  var span = document.createElement('span');
+                  span.className = 'xp-translate-text';
+                  span.setAttribute('data-xp-key', key);
+                  
+                  var tVal = _TRANS[_currentLang] ? _TRANS[_currentLang][key] : null;
+                  span.textContent = tVal ? tVal : matchText;
+                  
+                  var before = node.nodeValue.substring(0, node.nodeValue.indexOf(matchText));
+                  var after = node.nodeValue.substring(node.nodeValue.indexOf(matchText) + matchText.length);
+                  
+                  var frag = document.createDocumentFragment();
+                  if(before) frag.appendChild(document.createTextNode(before));
+                  frag.appendChild(span);
+                  if(after) frag.appendChild(document.createTextNode(after));
+                  
+                  node.parentNode.replaceChild(frag, node);
+              }
+          });
+          
+          if(root.querySelectorAll) {
+              var inputs = [root];
+              if(root.tagName !== 'INPUT' && root.tagName !== 'TEXTAREA') {
+                  inputs = root.querySelectorAll('input[placeholder], textarea[placeholder]');
+              }
+              inputs.forEach(function(el) {
+                  if(!el.getAttribute) return;
+                  var ph = el.getAttribute('placeholder');
+                  if(!ph) return;
+                  ph = ph.trim();
+                  if(!el.dataset.origPh && window._invMap[ph]) el.dataset.origPh = ph;
+                  var origPh = el.dataset.origPh;
+                  if(origPh && window._invMap[origPh]) {
+                      var k = window._invMap[origPh];
+                      var tv = _TRANS[_currentLang] ? _TRANS[_currentLang][k] : null;
+                      if(tv) el.setAttribute('placeholder', tv);
+                  }
+              });
+          }
+      };
+
+      // 5. Initial wrap
+      window._wrapTextNodes(document.body);
+
+      // 6. Observer for dynamically added nodes
+      var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(m) {
+              m.addedNodes.forEach(function(n) {
+                  if(n.nodeType === 1) { 
+                      if(n.classList && !n.classList.contains('xp-translate-text')) {
+                          window._wrapTextNodes(n);
+                      }
+                  } else if(n.nodeType === 3) {
+                      if(n.parentElement && !n.parentElement.classList.contains('xp-translate-text')) {
+                         window._wrapTextNodes(n.parentElement);
+                      }
+                  }
+              });
+          });
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // 7. Update all spans based on CURRENT language
+  document.querySelectorAll('.xp-translate-text').forEach(function(span) {
+      var key = span.getAttribute('data-xp-key');
+      var tVal = _TRANS[_currentLang] ? _TRANS[_currentLang][key] : null;
+      if(tVal) span.textContent = tVal;
+  });
+  
+  document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(function(el) {
+      var origPh = el.dataset.origPh;
+      if(origPh && window._invMap[origPh]) {
+          var k = window._invMap[origPh];
+          var tv = _TRANS[_currentLang] ? _TRANS[_currentLang][k] : null;
+          if(tv) el.setAttribute('placeholder', tv);
+      }
+  });
+
+  showToastNotification(lang==='ar'?'تم تغيير اللغة إلى العربية':lang==='ru'?'Язык изменён на русский':'Language changed to English','success');
+}
+
+// Apply stored language on load
+document.addEventListener('DOMContentLoaded', function(){
+  if(_currentLang !== 'en') setTimeout(function(){ _setLang(_currentLang); }, 800);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   VOICE INPUT (Web Speech API)
+   ═══════════════════════════════════════════════════════════════ */
+var _searchRecognition = null;
+var _chatRecognition = null;
+
+function _makeRecognition(onResult, onEnd){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ showToastNotification('Voice input not supported in this browser.','error'); return null; }
+  var r = new SR();
+  r.continuous = false;
+  r.interimResults = false;
+  r.lang = _currentLang==='ar'?'ar-AE':_currentLang==='bs'?'bs-BA':'en-US';
+  r.onresult = function(e){ var txt=e.results[0][0].transcript; onResult(txt); };
+  r.onend = onEnd;
+  r.onerror = function(e){ console.warn('Speech error:',e.error); onEnd(); };
+  return r;
+}
+
+function _toggleSearchVoice(){
+  var btn = document.getElementById('searchMicBtn');
+  if(_searchRecognition){
+    _searchRecognition.stop(); _searchRecognition=null;
+    btn.classList.remove('active'); return;
+  }
+  _searchRecognition = _makeRecognition(function(txt){
+    var inp=document.getElementById('searchInput'); if(inp){ inp.value=txt; debounceSearch(); }
+    showToastNotification('<i class="fas fa-microphone"></i> "'+txt+'"','success');
+  }, function(){
+    _searchRecognition=null;
+    if(btn)btn.classList.remove('active');
+  });
+  if(!_searchRecognition) return;
+  _searchRecognition.start();
+  btn.classList.add('active');
+  showToastNotification('<i class="fas fa-microphone"></i> '+t('voiceStart'),'info');
+}
+
+function _toggleChatVoice(){
+  var btn = document.getElementById('chatMicBtn');
+  if(_chatRecognition){
+    _chatRecognition.stop(); _chatRecognition=null;
+    btn.classList.remove('active'); return;
+  }
+  _chatRecognition = _makeRecognition(function(txt){
+    var inp=document.getElementById('aiChatInput'); if(inp){ inp.value=txt; }
+  }, function(){
+    _chatRecognition=null;
+    if(btn)btn.classList.remove('active');
+    setTimeout(function(){ _sendChat(); }, 200);
+  });
+  if(!_chatRecognition) return;
+  _chatRecognition.start();
+  btn.classList.add('active');
+}
+
+/* Voice input for a specific form field */
+var _fieldRecognition = null;
+function _fieldVoice(fieldId){
+  var btn = document.querySelector('[onclick="_fieldVoice(\''+fieldId+'\')"]');
+  if(_fieldRecognition){ _fieldRecognition.stop(); _fieldRecognition=null; if(btn)btn.classList.remove('active'); return; }
+  _fieldRecognition = _makeRecognition(function(txt){
+    var el=document.getElementById(fieldId); if(!el)return;
+    // For number fields strip non-numeric except dots/commas
+    if(el.type==='number'){ txt=txt.replace(/[^\d.,]/g,'').replace(',','.'); }
+    el.value=txt;
+    el.dispatchEvent(new Event('input'));
+    showToastNotification('<i class="fas fa-microphone"></i> "'+txt+'"','success');
+  }, function(){ _fieldRecognition=null; if(btn)btn.classList.remove('active'); });
+  if(!_fieldRecognition) return;
+  _fieldRecognition.start();
+  if(btn) btn.classList.add('active');
+  document.getElementById(fieldId).focus();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI CHAT WIDGET
+   ═══════════════════════════════════════════════════════════════ */
+var _chatOpen = false;
+var _chatHistory = [];
+var _chatStarted = false;
+
+function _toggleChat(){
+  _chatOpen = !_chatOpen;
+  var panel = document.getElementById('aiChatPanel');
+  var badge = document.getElementById('chatBadge');
+  if(_chatOpen){
+    panel.classList.add('open');
+    if(badge) badge.style.display='none';
+    if(!_chatStarted){ _chatStarted=true; _addChatMsg('ai', t('aiWelcome')); }
+    var inp=document.getElementById('aiChatInput'); if(inp) setTimeout(function(){ inp.focus(); },150);
+  } else {
+    panel.classList.remove('open');
+  }
+}
+
+function _addChatMsg(role, text){
+  var msgs = document.getElementById('aiChatMessages');
+  if(!msgs) return;
+  var div = document.createElement('div');
+  div.className = 'chat-msg '+role;
+  if(role==='ai') div.innerHTML='<div class="msg-name">XP AI</div>'+text;
+  else div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  _chatHistory.push({role:role,text:text});
+}
+
+function _showTyping(){
+  var msgs=document.getElementById('aiChatMessages');
+  var t=document.createElement('div');
+  t.className='chat-msg ai'; t.id='chatTyping';
+  t.innerHTML='<div class="msg-name">XP AI</div><div class="chat-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(t); msgs.scrollTop=msgs.scrollHeight;
+}
+function _hideTyping(){ var t=document.getElementById('chatTyping'); if(t)t.remove(); }
+
+function _sendChat(){
+  var inp=document.getElementById('aiChatInput');
+  var msg=(inp?inp.value:'').trim();
+  if(!msg) return;
+  inp.value='';
+  _addChatMsg('user', msg);
+  _showTyping();
+  setTimeout(function(){ _hideTyping(); _addChatMsg('ai', _aiReply(msg)); }, 900 + Math.random()*600);
+}
+
+function _fillField(id, val){ var el=document.getElementById(id); if(el){ el.value=val; el.dispatchEvent(new Event('input')); el.focus(); } }
+function _isModalOpen(){ var m=document.getElementById('plotModal'); return m&&!m.classList.contains('hidden'); }
+
+function _aiReply(q){
+  var ql = q.toLowerCase();
+  var total = typeof plots!=='undefined'?plots.length:0;
+  var avail = typeof plots!=='undefined'?plots.filter(function(p){return p.status==='Available';}).length:0;
+  var sold  = typeof plots!=='undefined'?plots.filter(function(p){return p.status==='Sold';}).length:0;
+  var res   = typeof plots!=='undefined'?plots.filter(function(p){return p.status==='Reserved';}).length:0;
+  var prices= typeof plots!=='undefined'?plots.map(function(p){return parseFloat(p.price);}).filter(function(v){return !isNaN(v);}):[];
+  var minP=prices.length?Math.min.apply(null,prices):0, maxP=prices.length?Math.max.apply(null,prices):0;
+  var avgP=prices.length?Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length):0;
+
+  /* ── PORTAL ACTIONS ── */
+
+  // Open new plot form
+  if(ql.match(/open|new|add|create|افتح|أضف|dodaj|otvori/).test&&ql.match(/plot|form|parcela|قطعة/i)){
+    setTimeout(function(){ if(typeof openPlotModal==='function') openPlotModal(); },300);
+    return '✅ Opening new plot form. I\'ll help you fill it in — just tell me the details!';
+  }
+  if(/open (new )?plot form|add new plot|new plot form|create plot/i.test(ql)){
+    setTimeout(function(){ if(typeof openPlotModal==='function') openPlotModal(); },300);
+    return '✅ Opening new plot form. Tell me: plot number, development, size, price?';
+  }
+
+  // Fill plot number
+  var fillNo = ql.match(/(?:plot (?:number|no|#)|set (?:number|no) to|fill (?:number|no))[:\s]+([a-z0-9_\-\.]+)/i);
+  if(fillNo){
+    var val=fillNo[1].toUpperCase();
+    if(_isModalOpen()){ _fillField('pm_no',val); return '✅ Plot number set to <b>'+val+'</b>.'; }
+    else return 'Plot form is not open. Say "open plot form" first, then I\'ll fill it.';
+  }
+
+  // Fill development
+  var fillDev = ql.match(/(?:set development|development is|fill development)[:\s]+(.+)/i);
+  if(fillDev){
+    var val2=fillDev[1].trim();
+    if(_isModalOpen()){ _fillField('pm_dev',val2); return '✅ Development set to <b>'+val2+'</b>.'; }
+    else return 'Plot form is not open. Say "open plot form" first.';
+  }
+
+  // Fill price
+  var fillPr = ql.match(/(?:set price|price is|fill price)[:\s]+([\d,\.]+)/i);
+  if(fillPr){
+    var val3=fillPr[1].replace(/[,\s]/g,'');
+    if(_isModalOpen()){ _fillField('pm_price',val3); return '✅ Price set to <b>AED '+fmtN(parseFloat(val3))+'</b>.'; }
+    else return 'Plot form is not open. Say "open plot form" first.';
+  }
+
+  // Fill size
+  var fillSz = ql.match(/(?:set size|size is|fill size)[:\s]+([\d,\.]+)/i);
+  if(fillSz){
+    var val4=fillSz[1].replace(/[,\s]/g,'');
+    if(_isModalOpen()){ _fillField('pm_size',val4); return '✅ Size set to <b>'+fmtN(parseFloat(val4))+' sqft</b>.'; }
+    else return 'Plot form is not open. Say "open plot form" first.';
+  }
+
+  // Fill status
+  var fillSt = ql.match(/(?:set status|status is)[:\s]+(available|reserved|sold)/i);
+  if(fillSt){
+    var stVal=fillSt[1].charAt(0).toUpperCase()+fillSt[1].slice(1).toLowerCase();
+    if(_isModalOpen()){ _fillField('pm_status',stVal); return '✅ Status set to <b>'+stVal+'</b>.'; }
+    else return 'Plot form is not open. Say "open plot form" first.';
+  }
+
+  // Filter by status
+  if(/show (me )?(available|reserved|sold) plots?/i.test(ql)){
+    var st=ql.match(/available|reserved|sold/i)[0];
+    st=st.charAt(0).toUpperCase()+st.slice(1);
+    var fs=document.getElementById('filterStatus'); if(fs){ fs.value=st; if(typeof applyFilters==='function')applyFilters(); }
+    return '✅ Filtered to show <b>'+st+'</b> plots only. '+
+      (st==='Available'?avail:st==='Reserved'?res:sold)+' plots shown.';
+  }
+
+  // Switch view
+  if(/map view|show map|go to map/i.test(ql)){
+    setTimeout(function(){ if(typeof togglePlotView==='function')togglePlotView('map'); },300);
+    return '✅ Switching to Map View.';
+  }
+  if(/table view|show table|go to table/i.test(ql)){
+    setTimeout(function(){ if(typeof togglePlotView==='function')togglePlotView('table'); },300);
+    return '✅ Switching to Table View.';
+  }
+
+  // Search for a plot by number
+  var searchFor=ql.match(/(?:find|search|look for|edit|open) plot ([a-z0-9\-]+)/i);
+  if(searchFor){
+    var pno=searchFor[1].toUpperCase();
+    var found=typeof plots!=='undefined'?plots.find(function(p){return p.no&&p.no.toUpperCase()===pno;}):null;
+    if(found){
+      setTimeout(function(){ if(typeof selectPlot==='function') selectPlot(found.id); },300);
+      return '✅ Found Plot <b>'+found.no+'</b> — '+found.dev+'. Status: <b>'+found.status+'</b>, Price: <b>AED '+fmtN(parseFloat(found.price))+'</b>. Opening it now.';
+    } else return 'Could not find plot <b>'+pno+'</b>. Check the plot number and try again.';
+  }
+
+  /* ── DATA QUERIES ── */
+  if(ql.match(/how many|count|total|كم|koliko/i))
+    return 'We have <b>'+total+' plots</b> total: <b>'+avail+'</b> available, <b>'+res+'</b> reserved, <b>'+sold+'</b> sold.';
+  if(ql.match(/\bavail|free\b|متاح|slobodn/i))
+    return '<b>'+avail+' plots</b> are available. Say "show available plots" to filter, or "open plot form" to add one.';
+  if(ql.match(/price|cost|aed|سعر|cijena|cheap|expensive/i))
+    return 'Prices: <b>AED '+fmtN(minP)+'</b> → <b>AED '+fmtN(maxP)+'</b>. Average: <b>AED '+fmtN(avgP)+'</b>. Say "show available plots" to browse.';
+  if(ql.match(/\bsold\b|مباع|prodan/i))
+    return '<b>'+sold+' plots</b> sold. '+avail+' still available.';
+  if(ql.match(/reserved|محجوز|rezerv/i))
+    return '<b>'+res+' plots</b> reserved.';
+  if(ql.match(/type|residential|commercial|industri|نوع|tip/i)){
+    if(typeof plots!=='undefined'&&plots.length){
+      var types={};plots.forEach(function(p){types[p.type||'Unknown']=(types[p.type||'Unknown']||0)+1;});
+      return 'Plot types: '+Object.keys(types).map(function(k){return'<b>'+k+'</b>: '+types[k];}).join(', ')+'. Say "show [type] plots" to filter.';
+    }
+  }
+  if(ql.match(/help|assist|what can|مساعدة|pomoc/i))
+    return 'I can:<br>• "open plot form" — open the add/edit form<br>• "fill plot number PLT-001" — fill a field<br>• "set price 750000" — set price<br>• "set development Breza Hills"<br>• "set status Available"<br>• "show available plots" — filter<br>• "find plot PLT-001" — open a plot<br>• "map view" / "table view" — switch<br>• Ask about counts, prices, types';
+  if(ql.match(/sync|firebase|cloud|مزامنة|sinkroniz/i))
+    return 'Use the <i class="fas fa-cloud"></i> Sync button to connect a Firebase room and sync with your team in real time.';
+  if(ql.match(/import|export|csv|upload/i))
+    return '<i class="fas fa-upload"></i> Import loads plots from CSV/Excel. <i class="fas fa-download"></i> Export downloads all as CSV.';
+  if(ql.match(/hello|hi|مرحبا|zdravo|hey/i))
+    return 'Hello! 👋 I\'m connected to your plot data. Try "open plot form", "show available plots", or ask anything about XP HOMES.';
+  if(ql.match(/breza|bosn/i))
+    return 'Breza Hills is a residential development in Bosnia. We have '+
+      (typeof plots!=='undefined'?plots.filter(function(p){return p.dev&&p.dev.toLowerCase().includes('breza');}).length:0)+
+      ' plots in this development.';
+
+  // Plot number direct lookup
+  if(typeof plots!=='undefined'){
+    var match=plots.find(function(p){ return p.no && p.no.toLowerCase().includes(ql.replace(/^plot\s+/i,'').trim()); });
+    if(match) return 'Plot <b>'+match.no+'</b> ('+match.dev+'): <b>'+match.status+'</b> · '+
+      (match.size||'—')+' sqft · AED '+(match.price?fmtN(parseFloat(match.price)):'—')+
+      '. Say "find plot '+match.no+'" to open it.';
+  }
+
+  return 'Try:<br>• "open plot form"<br>• "fill plot number PLT-001"<br>• "set development Breza Hills"<br>• "show available plots"<br>• "how many plots?"<br>• "find plot PLT-001"';
+}
 </script>
 
 <!-- ═══ Login Modal ══════════════════════════════════════════ -->
@@ -4256,6 +5247,29 @@ function delCust(i){ if(confirm('Delete?')){ _customers.splice(i,1); localStorag
         <div class="flex gap-2 mt-3"><button onclick="saveCustForm()" class="px-3 py-1.5 bg-[#6366f1] text-white rounded text-sm">Save</button><button onclick="cancelCustForm()" class="px-3 py-1.5 bg-[#334155] text-white rounded text-sm">Cancel</button></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ═══ AI Chat Widget ══════════════════════════════════════════ -->
+<button id="aiChatBtn" onclick="_toggleChat()" title="AI Assistant">
+  <i class="fas fa-robot"></i>
+  <span class="chat-badge" id="chatBadge">1</span>
+</button>
+
+<div id="aiChatPanel">
+  <div class="acp-header">
+    <div class="acp-avatar"><i class="fas fa-robot"></i></div>
+    <div>
+      <div class="acp-title" id="chatTitle">XP HOMES AI</div>
+      <div class="acp-sub" id="chatSub">Property Intelligence Assistant</div>
+    </div>
+    <button class="acp-close" onclick="_toggleChat()"><i class="fas fa-times"></i></button>
+  </div>
+  <div id="aiChatMessages"></div>
+  <div class="acp-input-row">
+    <input type="text" id="aiChatInput" placeholder="Ask about plots, prices, availability..." onkeydown="if(event.key==='Enter')_sendChat()">
+    <button class="acp-mic" id="chatMicBtn" onclick="_toggleChatVoice()" title="Voice input"><i class="fas fa-microphone"></i></button>
+    <button class="acp-send" onclick="_sendChat()"><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
 

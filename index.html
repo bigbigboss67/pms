@@ -1327,7 +1327,7 @@ function _resolveOnePlot(p){
 
 /* Apply GPS from a pasted Google Maps URL (full URL from browser address bar) */
 function applyPastedGpsUrl(pid){
-  var p=plots.find(function(x){return x.id===pid;});
+  var p=plots.find(function(x){return String(x.id)===String(pid);});
   if(!p)return;
   var inp=document.getElementById('gpsUrlPaste_'+pid);
   var raw=inp?inp.value.trim():'';
@@ -1352,7 +1352,7 @@ function applyPastedGpsUrl(pid){
 
 /* Resolve a single plot from its card button */
 function resolveAndPinPlot(pid){
-  var p=plots.find(function(x){return x.id===pid;});
+  var p=plots.find(function(x){return String(x.id)===String(pid);});
   if(!p){return;}
   var btn=document.getElementById('resolvePinBtn_'+pid);
   if(btn){btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Resolving…';btn.disabled=true;}
@@ -1717,7 +1717,7 @@ function makePopupHTML(p){
 
 /* Inline status change from popup status bar */
 window._ppSetStatus=function(pid,status,btn){
-  var p=plots.find(function(x){return x.id===pid;});
+  var p=plots.find(function(x){return String(x.id)===String(pid);});
   if(!p)return;
   p.status=status;
   /* Update all sibling buttons */
@@ -1855,7 +1855,7 @@ function startSetOnMapMode(){
   startSetOnMapModeForPlot(p.id);
 }
 function startSetOnMapModeForPlot(pid){
-  var p=plots.find(function(x){return x.id===pid;});
+  var p=plots.find(function(x){return String(x.id)===String(pid);});
   if(!p)return;
   _setOnMapPlotId=pid;
   var banner=document.getElementById('setOnMapBanner');
@@ -2051,7 +2051,7 @@ function bulkDelete(){if(!selectedIds.size)return;if(!confirm('Delete '+selected
 function bulkExport(){downloadCSV(plots.filter(function(p){return selectedIds.has(p.id);}),'selected_plots.csv');}
 
 function selectPlot(id){
-  var p=plots.find(function(x){return x.id===id;});if(!p)return;
+  var p=plots.find(function(x){return String(x.id)===String(id);});if(!p)return;
   var price=parseNum(p.price),size=parseNum(p.size),gfaN=parseNum(p.gfa);
   var szOk=!isNaN(size)&&size>0,prOk=!isNaN(price)&&price>0,gfaOk=!isNaN(gfaN)&&gfaN>0;
   var ppsf=(szOk&&prOk)?pricePerSqft(price,size):'—';
@@ -2297,12 +2297,12 @@ function closeCard(){
   /* Resize Leaflet after sidebar closes */
   setTimeout(function(){try{map.invalidateSize({animate:false});}catch(e){}},300);
 }
-function changePlotStatusFromCard(id,status){var p=plots.find(function(x){return x.id===id;});if(!p)return;p.status=status;saveToLocalStorage();addPlotMarkers();updateLegendCounts();if(currentView==='table')populateTable();showToastNotification('Status updated to '+status,'success');selectPlot(id);}
+function changePlotStatusFromCard(id,status){var p=plots.find(function(x){return String(x.id)===String(id);});if(!p)return;p.status=status;saveToLocalStorage();addPlotMarkers();updateLegendCounts();if(currentView==='table')populateTable();showToastNotification('Status updated to '+status,'success');selectPlot(id);}
 function deletePlot(id){if(!confirm('Delete this plot?'))return;plots=plots.filter(function(p){return p.id!==id;});filteredPlots=filteredPlots.filter(function(p){return p.id!==id;});saveToLocalStorage();populateTable();addPlotMarkers();updateTotalPlotsBadge();closeCard();showToastNotification('Plot deleted.','success');if(_syncActive && _fbRoomRef && typeof _fbRoomRef.child === 'function') _fbRoomRef.child(String(id).replace(/\./g, '_')).remove();}
 
 window.openPlotModal=function(id){
   var modal=document.getElementById('plotModal');modal.classList.remove('hidden');
-  populateContactDropdowns();
+  if(typeof populateContactDropdowns==='function') populateContactDropdowns();
   ['pm_id','pm_no','pm_dev','pm_gfa','pm_nfa','pm_far','pm_bua','pm_lat','pm_lng','pm_video','pm_notes','pm_unidoNotes'].forEach(function(f){var el=document.getElementById(f);if(el)el.value='';});
   document.getElementById('pm_status').value='Available';document.getElementById('pm_type').value='';
   var ur=document.getElementById('pm_unidoRequired'),us=document.getElementById('pm_unidoStage');if(ur)ur.value='';if(us)us.value='';
@@ -2310,10 +2310,20 @@ window.openPlotModal=function(id){
   var prev=document.getElementById('pm_imgPrev'),ph=document.getElementById('pm_imgPH');
   if(prev){prev.style.display='none';prev.src='';}if(ph)ph.style.display='flex';
   if(id){
-    var p=plots.find(function(x){return x.id===id;});if(!p)return;
+    var p=plots.find(function(x){return String(x.id)===String(id);});if(!p)return;
     document.getElementById('pm_title').textContent='Edit Plot '+p.no;
     document.getElementById('pm_id').value=p.id;document.getElementById('pm_no').value=p.no||'';
-    document.getElementById('pm_dev').value=p.dev||'';populateContactDropdowns(); setTimeout(function(){var sel=document.getElementById('pm_agentName'); if(sel){var idx=_agents.findIndex(function(a){return a.name===p.agentName;}); if(idx>=0){sel.value=String(idx); fillAgentContact();}}},50);document.getElementById('pm_agentContact').value=p.agentContact||'';var selD=document.getElementById('pm_devContactName'); if(selD){var idxD=_developers.findIndex(function(d){return d.name===p.devContactName;}); if(idxD>=0){selD.value=String(idxD); fillDeveloperContact();}}document.getElementById('pm_devContact').value=p.devContact||'';var selO=document.getElementById('pm_ownerName'); if(selO){var idxO=_ownersDir.findIndex(function(o){return o.name===p.ownerName;}); if(idxO>=0){selO.value=String(idxO); fillOwnerContact();}}document.getElementById('pm_ownerContact').value=p.ownerContact||'';var selC=document.getElementById('pm_customerName'); if(selC){var idxC=_customers.findIndex(function(c){return c.name===p.customerName;}); if(idxC>=0){selC.value=String(idxC); fillCustomerContact();}}document.getElementById('pm_customerContact').value=p.customerContact||'';document.getElementById('pm_status').value=p.status||'Available';
+    document.getElementById('pm_dev').value=p.dev||'';
+    if(typeof populateContactDropdowns==='function') populateContactDropdowns();
+    var selA=document.getElementById('pm_agentName');if(selA)selA.value=p.agentName||'';
+    document.getElementById('pm_agentContact').value=p.agentContact||'';
+    var selD=document.getElementById('pm_devContactName');if(selD)selD.value=p.devContactName||'';
+    document.getElementById('pm_devContact').value=p.devContact||'';
+    var selO=document.getElementById('pm_ownerName');if(selO)selO.value=p.ownerName||'';
+    document.getElementById('pm_ownerContact').value=p.ownerContact||'';
+    var selC=document.getElementById('pm_customerName');if(selC)selC.value=p.customerName||'';
+    document.getElementById('pm_customerContact').value=p.customerContact||'';
+    document.getElementById('pm_status').value=p.status||'Available';
     document.getElementById('pm_type').value=p.type||'';document.getElementById('pm_size').value=p.size||'';
     document.getElementById('pm_price').value=p.price||'';document.getElementById('pm_gfa').value=p.gfa||'';
     document.getElementById('pm_nfa').value=p.nfa||'';document.getElementById('pm_far').value=p.far||'';
@@ -2734,7 +2744,7 @@ function downloadCSV(data,filename){
 }
 
 window.printPlot=function(id){
-  var p=plots.find(function(x){return x.id===id;});if(!p)return;
+  var p=plots.find(function(x){return String(x.id)===String(id);});if(!p)return;
   var price=parseFloat(p.price)||0,size=parseFloat(p.size)||0;
   var ppm=(size&&price)?'AED '+Math.round(price/size).toLocaleString()+' /sqft':'—';
   var totalM=price?(price/1000000).toFixed(2)+' M AED':'—';
@@ -3432,7 +3442,7 @@ function askPortalAI(q){
 }
 
 window.printPlot=function(id){
-  var p=plots.find(function(x){return x.id===id;});if(!p)return;
+  var p=plots.find(function(x){return String(x.id)===String(id);});if(!p)return;
   var price=parseNum(p.price),size=parseNum(p.size),gfa=parseNum(p.gfa)||parseNum(p.bua);
   var ppsf=(price&&size)?'AED '+Math.round(price/size).toLocaleString()+'/sqft':'-';
   var today=new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'});

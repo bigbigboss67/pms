@@ -750,6 +750,7 @@ body.rtl .acp-close{margin-left:0;margin-right:auto;}
           <option value="ru">🇷🇺 Русский</option>
         </select>
         <button class="ibtn" onclick="toggleOnlineSync()" title="Sync"><i class="fas fa-cloud"></i></button>
+        <span id="syncBadge" onclick="toggleOnlineSync()" title="Click to manage sync" style="display:none;font-size:9px;font-weight:800;border-radius:20px;padding:3px 9px;letter-spacing:.6px;align-items:center;cursor:pointer;gap:4px;margin-left:-2px;transition:all .2s;"></span>
         <button class="ibtn" onclick="document.getElementById('importModal').classList.remove('hidden')" title="Import"><i class="fas fa-upload"></i></button>
         <button class="ibtn" onclick="exportCSV()" title="Export"><i class="fas fa-download"></i></button>
         <span class="cbadge" id="totalPlotsBadge">0</span>
@@ -2065,7 +2066,7 @@ function applyFilters(){
     if(!isNaN(maxS)&&(isNaN(sz)||sz>maxS))return false;
     if(!isNaN(minG)&&(isNaN(gf)||gf<minG))return false;
     if(!isNaN(maxG)&&(isNaN(gf)||gf>maxG))return false;
-    if(srch){var h=((p.no||'')+' '+(p.dev||'')+' '+(p.type||'')+' '+(p.status||'')+' '+(p.notes||''));if(h.toLowerCase().indexOf(srch)===-1)return false;}
+    if(srch){var h=((p.no||'')+' '+(p.dev||'')+' '+(p.type||'')+' '+(p.status||'')+' '+(p.notes||'')+' '+(p.ownerName||'')+' '+(p.ownerContact||'')+' '+(p.source||'')+' '+String(p.price||'')+' '+String(p.size||'')+' '+(p.city||'')+' '+(p.emirate||''));if(h.toLowerCase().indexOf(srch)===-1)return false;}
     return true;
   });
   addPlotMarkers();if(currentView==='table')populateTable();
@@ -3572,12 +3573,29 @@ function _plotsForSync(arr){
 
 function _setSyncStatus(s){
   _syncStatus=s;
+  /* Update icon button */
   var btn=document.querySelector('#topbar button[title^="Sync"]');
-  if(!btn)return;
-  if(s==='live'){btn.style.color='#34d399';btn.title='Sync • Live';}
-  else if(s==='connecting'){btn.style.color='#fbbf24';btn.title='Sync • Connecting…';}
-  else if(s==='error'){btn.style.color='#ef4444';btn.title='Sync • Error — click to retry';}
-  else{btn.style.color='';btn.title='Sync';}
+  if(btn){
+    if(s==='live'){btn.style.color='#34d399';btn.title='Sync • Live';}
+    else if(s==='connecting'){btn.style.color='#fbbf24';btn.title='Sync • Connecting…';}
+    else if(s==='error'){btn.style.color='#ef4444';btn.title='Sync • Error — click to retry';}
+    else{btn.style.color='';btn.title='Sync';}
+  }
+  /* Update persistent badge */
+  var badge=document.getElementById('syncBadge');
+  if(!badge)return;
+  if(s==='live'){
+    badge.style.cssText='display:inline-flex;font-size:9px;font-weight:800;border-radius:20px;padding:3px 9px;letter-spacing:.6px;align-items:center;cursor:pointer;gap:4px;margin-left:-2px;background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.28);';
+    badge.innerHTML='<span style="width:5px;height:5px;background:#34d399;border-radius:50%;flex-shrink:0;animation:pulse 1.2s infinite;display:inline-block;"></span>LIVE · '+esc(_syncRoom);
+  } else if(s==='connecting'){
+    badge.style.cssText='display:inline-flex;font-size:9px;font-weight:800;border-radius:20px;padding:3px 9px;letter-spacing:.6px;align-items:center;cursor:pointer;gap:4px;margin-left:-2px;background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.28);';
+    badge.innerHTML='<span style="width:5px;height:5px;background:#fbbf24;border-radius:50%;flex-shrink:0;display:inline-block;"></span>CONNECTING…';
+  } else if(s==='error'){
+    badge.style.cssText='display:inline-flex;font-size:9px;font-weight:800;border-radius:20px;padding:3px 9px;letter-spacing:.6px;align-items:center;cursor:pointer;gap:4px;margin-left:-2px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.28);';
+    badge.innerHTML='<span style="width:5px;height:5px;background:#ef4444;border-radius:50%;flex-shrink:0;display:inline-block;"></span>SYNC ERROR';
+  } else {
+    badge.style.display='none';
+  }
 }
 
 var _syncRefreshTimer;
@@ -3642,16 +3660,27 @@ function connectSync(autoRoom){
     }
 
     _fbRoomRef.on('child_added', function(snap){
-      var p = snap.val(); if(!p)return;
+      var p = snap.val(); if(!p||!p.id)return;
       var idx = plots.findIndex(function(x){return String(x.id) === String(p.id);});
-      if(idx === -1) { plots.push(p); _syncRefreshUI(); }
-      else if(JSON.stringify(plots[idx]) !== JSON.stringify(p)) { plots[idx] = Object.assign(plots[idx], p); _syncRefreshUI(); }
+      if(idx === -1){ plots.push(p); _syncRefreshUI(); }
+      else {
+        /* Preserve local image if remote stripped it */
+        var localImg = plots[idx].image||'';
+        plots[idx] = Object.assign({}, p);
+        if(!plots[idx].image && localImg) plots[idx].image = localImg;
+        _syncRefreshUI();
+      }
     });
-    
+
     _fbRoomRef.on('child_changed', function(snap){
-      var p = snap.val(); if(!p)return;
+      var p = snap.val(); if(!p||!p.id)return;
       var idx = plots.findIndex(function(x){return String(x.id) === String(p.id);});
-      if(idx !== -1 && JSON.stringify(plots[idx]) !== JSON.stringify(p)) { plots[idx] = Object.assign(plots[idx], p); _syncRefreshUI(); }
+      if(idx !== -1){
+        var localImg = plots[idx].image||'';
+        plots[idx] = Object.assign({}, p);
+        if(!plots[idx].image && localImg) plots[idx].image = localImg;
+        _syncRefreshUI();
+      }
     });
     
     _fbRoomRef.on('child_removed', function(snap){
@@ -4994,6 +5023,9 @@ function _showTyping(){
 }
 function _hideTyping(){ var t=document.getElementById('chatTyping'); if(t)t.remove(); }
 
+/* ── Gemini API key (optional — set to enable AI market insights) ── */
+var _GEMINI_API_KEY = ''; // e.g. 'AIzaSy...'  Get free key: aistudio.google.com
+
 function _sendChat(){
   var inp=document.getElementById('aiChatInput');
   var msg=(inp?inp.value:'').trim();
@@ -5001,7 +5033,67 @@ function _sendChat(){
   inp.value='';
   _addChatMsg('user', msg);
   _showTyping();
-  setTimeout(function(){ _hideTyping(); _addChatMsg('ai', _aiReply(msg)); }, 900 + Math.random()*600);
+
+  /* Step 1: Always answer from local portal data first */
+  var localAnswer = _aiReply(msg);
+  var isGenericFallback = localAnswer.startsWith('Try:');
+
+  /* Step 2: Decide if web insight is useful */
+  var wantsWebInsight = /price.*trend|market|invest|forecast|predict|future|value|worth|growth|demand|appreciat|rental|yield|return|economy|inflation|interest rate|location|neighbour|infrastr|transport|develop/i.test(msg);
+
+  if(wantsWebInsight || isGenericFallback){
+    _fetchWebInsight(msg, function(webInsight){
+      _hideTyping();
+      var reply = isGenericFallback ? '' : localAnswer;
+      if(webInsight){
+        if(reply) reply += '<br><br>';
+        reply += '<span style="font-size:9px;color:#6366f1;font-weight:800;letter-spacing:.5px;text-transform:uppercase;">🌐 Market Insight</span><br><span style="color:#94a3b8;font-size:11px;">'+webInsight+'</span>';
+      }
+      _addChatMsg('ai', reply || localAnswer);
+    });
+  } else {
+    setTimeout(function(){ _hideTyping(); _addChatMsg('ai', localAnswer); }, 700 + Math.random()*500);
+  }
+}
+
+/* Fetch web insight — Gemini if key set, else Wikipedia fallback */
+function _fetchWebInsight(query, callback){
+  var topic = query.replace(/show|find|open|fill|set|map view|table view|how many|count/gi,'').trim();
+  if(!topic || topic.length < 3){ callback(''); return; }
+  if(_GEMINI_API_KEY){ _callGemini(query, callback); return; }
+  /* Wikipedia free API — no key needed, CORS-enabled */
+  var q = encodeURIComponent(topic + ' real estate property market');
+  fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch='+q+'&format=json&origin=*&srlimit=1&utf8=1')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var first = data.query&&data.query.search&&data.query.search[0];
+      if(first&&first.snippet){
+        var text = first.snippet.replace(/<[^>]+>/g,'').replace(/&quot;/g,'"').trim();
+        callback(text.length>220 ? text.substring(0,220)+'…' : text);
+      } else { callback(''); }
+    })
+    .catch(function(){ callback(''); });
+}
+
+/* Gemini 1.5 Flash call — enriches replies with real AI */
+function _callGemini(question, callback){
+  var pcount = typeof plots!=='undefined'?plots.length:0;
+  var avail  = typeof plots!=='undefined'?plots.filter(function(p){return p.status==='Available';}).length:0;
+  var devs   = typeof plots!=='undefined'?[...new Set(plots.map(function(p){return p.dev;}).filter(Boolean))].slice(0,6).join(', '):'';
+  var prices = typeof plots!=='undefined'?plots.map(function(p){return parseFloat(p.price);}).filter(function(v){return !isNaN(v);}):[];
+  var avgP   = prices.length?Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length):0;
+  var ctx    = 'Portal: '+pcount+' total plots, '+avail+' available. Developments: '+devs+'. Avg price: AED '+avgP+'.';
+  var prompt = 'You are a concise real estate AI for XP HOMES. Context: '+ctx+' User: "'+question+'". Reply in 2–3 sentences with market insight or prediction. Be specific and helpful.';
+  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+_GEMINI_API_KEY, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var text = data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts&&data.candidates[0].content.parts[0]?data.candidates[0].content.parts[0].text:'';
+    callback(text?text.substring(0,400):'');
+  })
+  .catch(function(){ callback(''); });
 }
 
 function _fillField(id, val){ var el=document.getElementById(id); if(el){ el.value=val; el.dispatchEvent(new Event('input')); el.focus(); } }
@@ -5129,15 +5221,32 @@ function _aiReply(q){
       (typeof plots!=='undefined'?plots.filter(function(p){return p.dev&&p.dev.toLowerCase().includes('breza');}).length:0)+
       ' plots in this development.';
 
-  // Plot number direct lookup
-  if(typeof plots!=='undefined'){
-    var match=plots.find(function(p){ return p.no && p.no.toLowerCase().includes(ql.replace(/^plot\s+/i,'').trim()); });
-    if(match) return 'Plot <b>'+match.no+'</b> ('+match.dev+'): <b>'+match.status+'</b> · '+
-      (match.size||'—')+' sqft · AED '+(match.price?fmtN(parseFloat(match.price)):'—')+
-      '. Say "find plot '+match.no+'" to open it.';
+  // Full-text search across all plot fields
+  if(typeof plots!=='undefined' && ql.length > 2){
+    var term = ql.replace(/^(plot|find|search|show|about)\s+/i,'').trim();
+    /* First: exact plot number */
+    var byNo = plots.find(function(p){ return p.no && p.no.toLowerCase() === term; });
+    if(byNo) return 'Plot <b>'+byNo.no+'</b> ('+byNo.dev+'): <b>'+byNo.status+'</b> · '+(byNo.size||'—')+' sqft · AED '+(byNo.price?fmtN(parseFloat(byNo.price)):'—')+'. Say "find plot '+byNo.no+'" to open it.';
+    /* Second: partial match across all fields */
+    var matches = plots.filter(function(p){
+      var h = ((p.no||'')+' '+(p.dev||'')+' '+(p.type||'')+' '+(p.status||'')+' '+(p.ownerName||'')+' '+(p.notes||'')+' '+(p.city||'')+' '+String(p.price||'')).toLowerCase();
+      return h.indexOf(term) !== -1;
+    });
+    if(matches.length === 1){
+      var m=matches[0];
+      return 'Found: Plot <b>'+m.no+'</b> ('+m.dev+'): <b>'+m.status+'</b> · '+(m.size||'—')+' sqft · AED '+(m.price?fmtN(parseFloat(m.price)):'—')+'. Say "find plot '+m.no+'" to open it.';
+    }
+    if(matches.length > 1 && matches.length <= 8){
+      return '<b>'+matches.length+' plots</b> match "<b>'+esc(term)+'</b>":<br>'+
+        matches.map(function(m){ return '• '+m.no+' ('+m.dev+') — '+m.status+' · AED '+(m.price?fmtN(parseFloat(m.price)):'—'); }).join('<br>')+
+        '<br>Say "find plot [no]" to open one.';
+    }
+    if(matches.length > 8){
+      return '<b>'+matches.length+' plots</b> match "<b>'+esc(term)+'</b>". Try a more specific search or use the search bar above to filter on the map.';
+    }
   }
 
-  return 'Try:<br>• "open plot form"<br>• "fill plot number PLT-001"<br>• "set development Breza Hills"<br>• "show available plots"<br>• "how many plots?"<br>• "find plot PLT-001"';
+  return 'Try:<br>• "open plot form"<br>• "fill plot number PLT-001"<br>• "set development Breza Hills"<br>• "show available plots"<br>• "how many plots?"<br>• "find plot PLT-001"<br>• Ask about prices, types, market insights';
 }
 
 // ═══ Glass KPI Bar updater ═══
